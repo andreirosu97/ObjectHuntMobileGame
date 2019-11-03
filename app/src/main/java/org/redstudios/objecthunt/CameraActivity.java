@@ -1,4 +1,5 @@
 package org.redstudios.objecthunt;
+
 import android.Manifest;
 import android.app.Fragment;
 import android.content.Context;
@@ -17,33 +18,30 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Trace;
-import androidx.annotation.NonNull;
+import android.util.Log;
+import android.util.Size;
+import android.view.Surface;
+import android.view.ViewTreeObserver;
+import android.view.WindowManager;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import org.redstudios.objecthunt.eviroment.ImageUtils;
+import org.redstudios.objecthunt.eviroment.Logger;
+import org.redstudios.objecthunt.tf.Classifier.*;
+import org.tensorflow.lite.examples.classification.R;
+
+import java.nio.ByteBuffer;
+import java.util.List;
+
 import androidx.annotation.UiThread;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import android.util.Log;
-import android.util.Size;
-import android.view.Surface;
-import android.view.View;
-import android.view.ViewTreeObserver;
-import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import java.nio.ByteBuffer;
-
-import org.redstudios.objecthunt.eviroment.ImageUtils;
-import org.redstudios.objecthunt.eviroment.Logger;
-
 public abstract class CameraActivity extends AppCompatActivity
         implements OnImageAvailableListener,
-        Camera.PreviewCallback
-{
+        Camera.PreviewCallback {
 
     private static final int PERMISSIONS_REQUEST = 1;
 
@@ -51,7 +49,6 @@ public abstract class CameraActivity extends AppCompatActivity
 
 
     private static final String PERMISSION_CAMERA = Manifest.permission.CAMERA;
-    private static final String TAG = "CameraActivity";
     protected int previewWidth = 0;
     protected int previewHeight = 0;
     private Handler handler;
@@ -65,25 +62,12 @@ public abstract class CameraActivity extends AppCompatActivity
     private Runnable imageConverter;
     private LinearLayout bottomSheetLayout;
     private LinearLayout gestureLayout;
-    private BottomSheetBehavior sheetBehavior;
     protected TextView recognitionTextView,
             recognition1TextView,
             recognition2TextView,
             recognitionValueTextView,
             recognition1ValueTextView,
             recognition2ValueTextView;
-    protected TextView frameValueTextView,
-            cropValueTextView,
-            cameraResolutionTextView,
-            rotationTextView,
-            inferenceTimeTextView;
-    protected ImageView bottomSheetArrowImageView;
-    private ImageView plusImageView, minusImageView;
-    private Spinner modelSpinner;
-    private Spinner deviceSpinner;
-    private TextView threadsTextView;
-
-    private int numThreads = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,7 +88,6 @@ public abstract class CameraActivity extends AppCompatActivity
 
         bottomSheetLayout = findViewById(R.id.bottom_sheet_layout);
         gestureLayout = findViewById(R.id.gesture_layout);
-//        sheetBehavior = BottomSheetBehavior.from(bottomSheetLayout);
 
         ViewTreeObserver vto = gestureLayout.getViewTreeObserver();
         vto.addOnGlobalLayoutListener(
@@ -116,27 +99,15 @@ public abstract class CameraActivity extends AppCompatActivity
                         } else {
                             gestureLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                         }
-                        //                int width = bottomSheetLayout.getMeasuredWidth();
-                        int height = gestureLayout.getMeasuredHeight();
-
-//                        sheetBehavior.setPeekHeight(height);
                     }
                 });
-//        sheetBehavior.setHideable(false);
 
         recognitionTextView = findViewById(R.id.detected_item);
-        recognitionTextView.setText("Detectie 1");
         recognitionValueTextView = findViewById(R.id.detected_item_value);
-        recognitionValueTextView.setText("Value 1");
         recognition1TextView = findViewById(R.id.detected_item1);
-        recognition1TextView.setText("Detectie 2");
         recognition1ValueTextView = findViewById(R.id.detected_item1_value);
-        recognition1ValueTextView.setText("Value 2");
         recognition2TextView = findViewById(R.id.detected_item2);
-        recognition2TextView.setText("Detectie 3");
         recognition2ValueTextView = findViewById(R.id.detected_item2_value);
-        recognition2ValueTextView.setText("Value 3");
-
     }
 
     protected int[] getRgbBytes() {
@@ -152,12 +123,14 @@ public abstract class CameraActivity extends AppCompatActivity
         return yuvBytes[0];
     }
 
-    /** Callback for android.hardware.Camera API */
+    /**
+     * Callback for android.hardware.Camera API
+     */
     @Override
     public void onPreviewFrame(final byte[] bytes, final Camera camera) {
-        Log.d("ANDREI","onPreviewFrame");
+        Log.d("ANDREI", "onPreviewFrame");
         if (isProcessingFrame) {
-            Log.w(TAG, "Dropping frame!");
+            LOGGER.w("Dropping frame!");
             return;
         }
 
@@ -171,7 +144,7 @@ public abstract class CameraActivity extends AppCompatActivity
                 onPreviewSizeChosen(new Size(previewSize.width, previewSize.height), 90);
             }
         } catch (final Exception e) {
-            Log.e(TAG, "Exception!" , e);
+            LOGGER.e(e, "Exception!");
             return;
         }
 
@@ -198,11 +171,11 @@ public abstract class CameraActivity extends AppCompatActivity
         processImage();
     }
 
-    /** Callback for Camera2 API */
+    /**
+     * Callback for Camera2 API
+     */
     @Override
     public void onImageAvailable(final ImageReader reader) {
-        Log.i(TAG,"onImageAvailable");
-
         // We need wait until we have some size from onPreviewSizeChosen
         if (previewWidth == 0 || previewHeight == 0) {
             return;
@@ -266,13 +239,12 @@ public abstract class CameraActivity extends AppCompatActivity
 
     @Override
     public synchronized void onStart() {
-        Log.d(TAG,"onStart " + this);
         super.onStart();
     }
 
     @Override
     public synchronized void onResume() {
-        Log.d(TAG,"onResume " + this);
+        LOGGER.d("onResume " + this);
         super.onResume();
 
         handlerThread = new HandlerThread("inference");
@@ -282,7 +254,7 @@ public abstract class CameraActivity extends AppCompatActivity
 
     @Override
     public synchronized void onPause() {
-        Log.d(TAG,"onPause " + this);
+        LOGGER.d("onPause " + this);
 
         handlerThread.quitSafely();
         try {
@@ -290,7 +262,7 @@ public abstract class CameraActivity extends AppCompatActivity
             handlerThread = null;
             handler = null;
         } catch (final InterruptedException e) {
-            Log.e(TAG, "Exception!",e);
+            LOGGER.e(e, "Exception!");
         }
 
         super.onPause();
@@ -298,13 +270,13 @@ public abstract class CameraActivity extends AppCompatActivity
 
     @Override
     public synchronized void onStop() {
-        Log.d(TAG,"onStop " + this);
+        LOGGER.d("onStop " + this);
         super.onStop();
     }
 
     @Override
     public synchronized void onDestroy() {
-        Log.d(TAG,"onDestroy " + this);
+        LOGGER.d("onDestroy " + this);
         super.onDestroy();
     }
 
@@ -345,7 +317,7 @@ public abstract class CameraActivity extends AppCompatActivity
                         Toast.LENGTH_LONG)
                         .show();
             }
-            requestPermissions(new String[] {PERMISSION_CAMERA}, PERMISSIONS_REQUEST);
+            requestPermissions(new String[]{PERMISSION_CAMERA}, PERMISSIONS_REQUEST);
         }
     }
 
@@ -458,11 +430,12 @@ public abstract class CameraActivity extends AppCompatActivity
     }
 
     @UiThread
-   /* protected void showResultsInBottomSheet(List<Recognition> results) {
+    protected void showResultsInBottomSheet(List<Recognition> results) {
         if (results != null && results.size() >= 3) {
             Recognition recognition = results.get(0);
             if (recognition != null) {
-                if (recognition.getTitle() != null) recognitionTextView.setText(recognition.getTitle());
+                if (recognition.getTitle() != null)
+                    recognitionTextView.setText(recognition.getTitle());
                 if (recognition.getConfidence() != null)
                     recognitionValueTextView.setText(
                             String.format("%.2f", (100 * recognition.getConfidence())) + "%");
@@ -470,7 +443,8 @@ public abstract class CameraActivity extends AppCompatActivity
 
             Recognition recognition1 = results.get(1);
             if (recognition1 != null) {
-                if (recognition1.getTitle() != null) recognition1TextView.setText(recognition1.getTitle());
+                if (recognition1.getTitle() != null)
+                    recognition1TextView.setText(recognition1.getTitle());
                 if (recognition1.getConfidence() != null)
                     recognition1ValueTextView.setText(
                             String.format("%.2f", (100 * recognition1.getConfidence())) + "%");
@@ -478,13 +452,14 @@ public abstract class CameraActivity extends AppCompatActivity
 
             Recognition recognition2 = results.get(2);
             if (recognition2 != null) {
-                if (recognition2.getTitle() != null) recognition2TextView.setText(recognition2.getTitle());
+                if (recognition2.getTitle() != null)
+                    recognition2TextView.setText(recognition2.getTitle());
                 if (recognition2.getConfidence() != null)
                     recognition2ValueTextView.setText(
                             String.format("%.2f", (100 * recognition2.getConfidence())) + "%");
             }
         }
-    }*/
+    }
 
     protected abstract void processImage();
 
