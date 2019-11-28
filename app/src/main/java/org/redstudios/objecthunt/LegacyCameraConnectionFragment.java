@@ -35,7 +35,6 @@ import android.view.ViewGroup;
 
 import org.redstudios.objecthunt.customview.AutoFitTextureView;
 import org.redstudios.objecthunt.eviroment.Logger;
-import org.tensorflow.lite.examples.classification.R;
 
 import java.io.IOException;
 import java.util.List;

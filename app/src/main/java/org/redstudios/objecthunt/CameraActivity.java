@@ -30,7 +30,6 @@ import android.widget.Toast;
 import org.redstudios.objecthunt.eviroment.ImageUtils;
 import org.redstudios.objecthunt.eviroment.Logger;
 import org.redstudios.objecthunt.tf.Classifier.*;
-import org.tensorflow.lite.examples.classification.R;
 
 import java.nio.ByteBuffer;
 import java.util.List;

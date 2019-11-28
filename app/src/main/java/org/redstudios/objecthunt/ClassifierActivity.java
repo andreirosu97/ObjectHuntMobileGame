@@ -12,7 +12,6 @@ import org.redstudios.objecthunt.eviroment.BorderedText;
 import org.redstudios.objecthunt.eviroment.Logger;
 import org.redstudios.objecthunt.tf.Classifier;
 import org.redstudios.objecthunt.tf.Classifier.GameMode;
-import org.tensorflow.lite.examples.classification.R;
 
 import java.io.IOException;
 import java.util.List;
