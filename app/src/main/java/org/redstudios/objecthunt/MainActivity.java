@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity implements NavigationHost {
         if (savedInstanceState == null) {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .add(R.id.container, new MenuFragment())
+                    .replace(R.id.fragment_container, new GameModeSelectFragment())
                     .commit();
         }
     }
@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements NavigationHost {
         FragmentTransaction transaction =
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.container, fragment);
+                        .replace(R.id.fragment_container, fragment);
 
         if (addToBackstack) {
             transaction.addToBackStack(null);

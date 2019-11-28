@@ -12,8 +12,6 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
-import org.redstudios.objecthunt.utils.NavigationHost;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -21,13 +19,13 @@ import androidx.fragment.app.Fragment;
 /**
  * Fragment representing the login screen for Shrine.
  */
-public class MenuFragment extends Fragment {
+public class GameModeSelectFragment extends Fragment {
 
     @Override
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_menu, container, false);
+        View view = inflater.inflate(R.layout.fragment_game_mode_select, container, false);
         final TextInputLayout passwordTextInput = view.findViewById(R.id.password_text_input);
         final TextInputEditText passwordEditText = view.findViewById(R.id.password_edit_text);
         MaterialButton nextButton = view.findViewById(R.id.next_button);
