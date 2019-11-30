@@ -18,4 +18,10 @@
     <string name="shr_product_title">Title</string>
     <string name="shr_product_description">Secondary text</string>
 
+
+    <string name="game_mode_button_1_text">Indoor</string>
+    <string name="game_mode_button_2_text">Outdoor</string>
+    <string name="game_mode_button_3_text">Office</string>
+    <string name="game_mode_button_4_text">Madness</string>
+
 </resources>

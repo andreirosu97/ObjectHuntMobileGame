@@ -26,9 +26,7 @@ public class GameModeSelectFragment extends Fragment {
             @NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_game_mode_select, container, false);
-        final TextInputLayout passwordTextInput = view.findViewById(R.id.password_text_input);
-        final TextInputEditText passwordEditText = view.findViewById(R.id.password_edit_text);
-        MaterialButton nextButton = view.findViewById(R.id.next_button);
+        MaterialButton nextButton = view.findViewById(R.id.game_mode_button_1);
 
         // Set an error if the password is less than 8 characters.
         nextButton.setOnClickListener(new View.OnClickListener() {
@@ -47,16 +45,7 @@ public class GameModeSelectFragment extends Fragment {
             }
         });
 
-        // Clear the error once more than 8 characters are typed.
-        passwordEditText.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View view, int i, KeyEvent keyEvent) {
-                if (isPasswordValid(passwordEditText.getText())) {
-                    passwordTextInput.setError(null); //Clear the error
-                }
-                return false;
-            }
-        });
+
         return view;
     }
 
