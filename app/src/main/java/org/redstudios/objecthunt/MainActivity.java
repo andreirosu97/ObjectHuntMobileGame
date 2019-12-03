@@ -1,15 +1,27 @@
 package org.redstudios.objecthunt;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toolbar;
 
 import org.redstudios.objecthunt.utils.NavigationHost;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-public class MainActivity extends AppCompatActivity implements NavigationHost {
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+public class MainActivity extends AppCompatActivity {
+
+    int opp_enter_anim = 0;
+    int opp_exit_anim = 0;
+    String currentTag = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,26 +33,45 @@ public class MainActivity extends AppCompatActivity implements NavigationHost {
                     .replace(R.id.fragment_container, new GameModeSelectFragment())
                     .commit();
         }
+
+        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch(item.getItemId()){
+                    case R.id.nav_home:
+                        if(currentTag != item.getTitle()) {
+                            opp_enter_anim = R.anim.enter_to_right;
+                            opp_exit_anim = R.anim.exit_to_left;
+                            MainActivity.this.navigateTo(new ProfileFragment(), (String)item.getTitle(), R.anim.enter_to_left, R.anim.exit_to_right);
+                        }
+                        break;
+                    case R.id.nav_favorites:
+                        if(currentTag!=  item.getTitle()) {
+                            MainActivity.this.navigateTo(new GameModeSelectFragment(), (String)item.getTitle(), opp_enter_anim, opp_exit_anim);
+                        }
+                        break;
+                    case R.id.nav_search:
+                        if(currentTag !=  item.getTitle()) {
+                            opp_enter_anim = R.anim.enter_to_left;
+                            opp_exit_anim = R.anim.exit_to_right;
+                            MainActivity.this.navigateTo(new LeaderboardFragment(), (String)item.getTitle(), R.anim.enter_to_right, R.anim.exit_to_left);
+                        }
+                        break;
+                }
+                return true;
+            }
+        });
     }
 
-    /**
-     * Navigate to the given fragment.
-     *
-     * @param fragment       Fragment to navigate to.
-     * @param addToBackstack Whether or not the current fragment should be added to the backstack.
-     */
-    @Override
-    public void navigateTo(Fragment fragment, boolean addToBackstack) {
+    public void navigateTo(Fragment fragment, String tag, int enter_anim, int exit_anim) {
         FragmentTransaction transaction =
                 getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.fragment_container, fragment);
-
-        if (addToBackstack) {
-            transaction.addToBackStack(null);
-        }
-
+                        .beginTransaction();
+        transaction.setCustomAnimations(enter_anim, exit_anim,enter_anim, exit_anim);
+        transaction.replace(R.id.fragment_container, fragment, tag);
         transaction.commit();
+        currentTag = tag;
     }
 }
 
