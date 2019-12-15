@@ -9,7 +9,7 @@
         <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
         <item name="android:textColorPrimary">@color/textColorPrimary</item>
 
-
+        <!-- Ripple effect. -->
         <item name="android:colorControlHighlight">@color/rippleColorButtons</item>
     </style>
 
@@ -38,8 +38,9 @@
     <style name="Widget.ObjHunt.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">
         <item name="android:background">@color/colorPrimaryDark</item>
         <item name="itemRippleColor">@color/rippleColorButtons</item>
-        <item name="itemIconTint">@color/menuButtons</item>
-        <item name="itemTextColor">@color/menuButtons</item>
+        <item name="labelVisibilityMode">labeled</item>
+        <item name="itemIconTint">@drawable/bottom_navigation_item_color</item>
+        <item name="itemTextColor">@drawable/bottom_navigation_item_color</item>
     </style>
 
 <!--    End Clickable  -->

@@ -29,23 +29,24 @@ public class MainActivity extends AppCompatActivity {
         }
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.nav_home);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch(item.getItemId()){
-                    case R.id.nav_home:
+                    case R.id.nav_profile:
                         if(currentTag != item.getTitle()) {
                             opp_enter_anim = R.anim.enter_to_right;
                             opp_exit_anim = R.anim.exit_to_left;
                             MainActivity.this.navigateTo(new ProfileFragment(), (String)item.getTitle(), R.anim.enter_to_left, R.anim.exit_to_right);
                         }
                         break;
-                    case R.id.nav_favorites:
+                    case R.id.nav_home:
                         if(currentTag!=  item.getTitle()) {
                             MainActivity.this.navigateTo(new GameModeSelectFragment(), (String)item.getTitle(), opp_enter_anim, opp_exit_anim);
                         }
                         break;
-                    case R.id.nav_search:
+                    case R.id.nav_leader:
                         if(currentTag !=  item.getTitle()) {
                             opp_enter_anim = R.anim.enter_to_left;
                             opp_exit_anim = R.anim.exit_to_right;

@@ -8,7 +8,8 @@
     <color name="pageBackground">#e7e9ed</color>
     <color name="textInputOutlineColor">#acb1fb</color>
     <color name="titleColor">#16193e</color>
-    <color name="menuButtons">#dedfec</color>
+    <color name="unselectedMenuButton">#dedfec</color>
+    <color name="selectedMenuButton">#1DE9B6</color>
     <color name="casualTextColor">#161F50</color>
     <color name="backgroundText">#D6D4D4</color>
     <color name="rippleColorButtons">#253CBE</color>

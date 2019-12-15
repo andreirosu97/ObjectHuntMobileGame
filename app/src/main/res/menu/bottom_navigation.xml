@@ -4,19 +4,19 @@
     android:layout_height="match_parent">
 
     <item
-        android:id="@+id/nav_home"
+        android:id="@+id/nav_profile"
         android:icon="@drawable/edit_icon"
         android:title="Profile"
         />
 
     <item
-        android:id="@+id/nav_favorites"
-        android:icon="@drawable/ic_favorite_black_24dp"
+        android:id="@+id/nav_home"
+        android:icon="@drawable/home_icon"
         android:title="Play"/>
 
     <item
-        android:id="@+id/nav_search"
-        android:icon="@drawable/ic_search_black_24dp"
+        android:id="@+id/nav_leader"
+        android:icon="@drawable/leader_icon"
         android:title="Leaderboard"/>
 
 </menu>
