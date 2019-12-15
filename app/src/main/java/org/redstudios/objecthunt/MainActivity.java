@@ -59,9 +59,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void navigateTo(Fragment fragment, String tag, int enter_anim, int exit_anim) {
-        FragmentTransaction transaction =
-                getSupportFragmentManager()
-                        .beginTransaction();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(enter_anim, exit_anim,enter_anim, exit_anim);
         transaction.replace(R.id.fragment_container, fragment, tag);
         transaction.commit();

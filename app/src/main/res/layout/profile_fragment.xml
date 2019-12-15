@@ -3,7 +3,78 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark">
+    android:padding="12dp">
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/border_line">
+    <TextView
+        android:id="@+id/TextViewNume"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/game_mode_button_1"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="10dp"
+        android:text="Ardei rosie"
+        android:textAppearance="@style/TextAppearance.ObjHunt.Title" />
+
+    <ImageButton
+        android:id="@+id/EditNameButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:src="@drawable/edit_icon" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@android:drawable/dialog_holo_light_frame"
+        android:gravity="center"
+        android:text="Top score "
+        android:textAppearance="@style/TextAppearance.ObjHunt.Profile.Title" />
+
+    <TextView
+        android:id="@+id/topScoreText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@android:drawable/dialog_holo_light_frame"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:gravity="center"
+        android:text="100 pts"
+        android:textAppearance="@style/TextAppearance.ObjHunt.Profile.Simple.Text" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="12dp"
+        android:background="@android:drawable/dialog_holo_light_frame"
+        android:orientation="vertical"
+        android:paddingLeft="26dp"
+        android:paddingTop="26dp"
+        android:paddingRight="26dp"
+        android:paddingBottom="16dp">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="6dp"
+        android:text="Top found objects"
+        android:textAppearance="@style/TextAppearance.ObjHunt.Profile.Title" />
+
+    <ListView
+        android:id="@+id/TopObjList"
+        style="@style/Widget.ObjHunt.ListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:drawable/dialog_holo_light_frame" />
+    </LinearLayout>
 
 </LinearLayout>
