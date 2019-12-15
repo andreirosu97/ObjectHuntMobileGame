@@ -17,9 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_alignParentBottom="true"
-        android:background="@color/colorPrimaryDark"
-        app:itemIconTint="@color/menuButtons"
-        app:itemTextColor="@color/menuButtons"
+        style="@style/Widget.ObjHunt.BottomNavigationView"
         app:menu="@menu/bottom_navigation" />
 
 </RelativeLayout>

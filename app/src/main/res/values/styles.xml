@@ -8,8 +8,12 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
         <item name="android:textColorPrimary">@color/textColorPrimary</item>
+
+
+        <item name="android:colorControlHighlight">@color/rippleColorButtons</item>
     </style>
 
+<!--    Text Input   -->
     <style name="Widget.ObjHunt.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="hintTextAppearance">@style/TextAppearance.ObjHunt.TextInputLayout.HintText</item>
         <item name="hintTextColor">@color/textColorPrimary</item>
@@ -21,25 +25,24 @@
         <item name="android:textColor">?android:attr/textColorPrimary</item>
     </style>
 
+<!--    End Text Input  -->
+
+<!--    Clickable   -->
     <style name="Widget.ObjHunt.Button" parent="Widget.MaterialComponents.Button">
         <item name="android:textColor">?android:attr/textColorPrimary</item>
         <item name="backgroundTint">?attr/colorPrimaryDark</item>
+        <item name="rippleColor">@color/rippleColorButtons</item>
     </style>
 
-    <style name="Widget.ObjHunt.Button.TextButton" parent="Widget.MaterialComponents.Button.TextButton">
-        <item name="android:textColor">?android:attr/textColorPrimary</item>
+
+    <style name="Widget.ObjHunt.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="android:background">@color/colorPrimaryDark</item>
+        <item name="itemRippleColor">@color/rippleColorButtons</item>
+        <item name="itemIconTint">@color/menuButtons</item>
+        <item name="itemTextColor">@color/menuButtons</item>
     </style>
 
-    <style name="Widget.ObjHunt.Toolbar" parent="Widget.AppCompat.Toolbar">
-        <item name="android:background">?attr/colorAccent</item>
-        <item name="android:theme">@style/Theme.ObjHunt</item>
-        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
-        <item name="titleTextAppearance">@style/TextAppearance.ObjHunt.Toolbar</item>
-    </style>
-
-    <style name="TextAppearance.ObjHunt.Toolbar" parent="TextAppearance.MaterialComponents.Button">
-        <item name="android:textSize">16sp</item>
-    </style>
+<!--    End Clickable  -->
 
     <style name="TextAppearance.ObjHunt.Title" parent="TextAppearance.MaterialComponents.Headline4">
         <item name="textAllCaps">true</item>

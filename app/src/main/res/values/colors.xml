@@ -5,12 +5,13 @@
     <color name="colorAccent">#bdc5f5</color>
     <color name="textColorPrimary">#dedfec</color>
     <color name="toolbarIconColor">@color/textColorPrimary</color>
-    <color name="loginPageBackgroundColor">#e7e9ed</color>
+    <color name="pageBackground">#e7e9ed</color>
     <color name="textInputOutlineColor">#acb1fb</color>
     <color name="titleColor">#16193e</color>
     <color name="menuButtons">#dedfec</color>
     <color name="casualTextColor">#161F50</color>
     <color name="backgroundText">#D6D4D4</color>
+    <color name="rippleColorButtons">#253CBE</color>
 
     <color name="semi_transparent">#66000000</color>
 </resources>

@@ -3,14 +3,11 @@ package org.redstudios.objecthunt;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,7 +22,7 @@ public class GameModeSelectFragment extends Fragment {
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_game_mode_select, container, false);
+        View view = inflater.inflate(R.layout.game_mode_select_fragment, container, false);
         MaterialButton nextButton = view.findViewById(R.id.game_mode_button_1);
 
         // Set an error if the password is less than 8 characters.

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/loginPageBackgroundColor"
+    android:background="@color/pageBackground"
     tools:context=".GameModeSelectFragment">
 
     <LinearLayout
@@ -33,7 +33,7 @@
             android:textAppearance="@style/TextAppearance.ObjHunt.Title"
             android:layout_above="@id/game_mode_button_1"/>
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/game_mode_button_1"
             style="@style/Widget.ObjHunt.Button"
             android:layout_width="match_parent"
@@ -43,9 +43,10 @@
             android:layout_marginRight="12dp"
             android:layout_marginBottom="20dp"
             android:layout_above="@id/game_mode_button_2"
+
             android:text="@string/game_mode_button_1_text" />
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/game_mode_button_2"
             style="@style/Widget.ObjHunt.Button"
             android:layout_width="match_parent"
@@ -57,7 +58,7 @@
             android:layout_above="@id/game_mode_button_3"
             android:text="@string/game_mode_button_2_text" />
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/game_mode_button_3"
             style="@style/Widget.ObjHunt.Button"
             android:layout_width="match_parent"
@@ -69,7 +70,7 @@
             android:layout_above="@id/game_mode_button_4"
             android:text="@string/game_mode_button_3_text" />
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/game_mode_button_4"
             style="@style/Widget.ObjHunt.Button"
             android:layout_width="match_parent"
