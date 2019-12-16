@@ -58,10 +58,17 @@
         <item name="android:textSize">30dp</item>
     </style>
 
-    <style name="TextAppearance.ObjHunt.Profile.Simple.Text" parent="TextAppearance.MaterialComponents.Headline4">
+    <style name="TextAppearance.ObjHunt.Profile.Simple.Dark.Text" parent="TextAppearance.MaterialComponents.Headline4">
         <item name="textAllCaps">false</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/backgroundText</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:textSize">30dp</item>
+    </style>
+
+    <style name="TextAppearance.ObjHunt.Profile.Simple.Light.Text" parent="TextAppearance.MaterialComponents.Headline4">
+        <item name="textAllCaps">false</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@android:color/white</item>
         <item name="android:textSize">30dp</item>
     </style>
 
