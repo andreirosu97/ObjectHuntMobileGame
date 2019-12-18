@@ -8,9 +8,13 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
 import org.redstudios.objecthunt.listeners.MenuItemSelectedListener;
 import org.redstudios.objecthunt.mainactivity_fragments.GameModeSelectFragment;
+import org.redstudios.objecthunt.model.AppState;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -18,6 +22,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //TODO make app not start before authentification
+
+        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setTimestampsInSnapshotsEnabled(true)
+                .build();
+        firebaseFirestore.setFirestoreSettings(settings);
+        DocumentReference userDocument = firebaseFirestore.collection("users").document("yTuyWzQLLpodzNf3lOE1");
+        AppState.get().setUserDocument(userDocument);
 
         if (savedInstanceState == null) {
             getSupportFragmentManager()
