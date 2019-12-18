@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1031977838302",
+    "firebase_url": "https://objecthunt-d590f.firebaseio.com",
+    "project_id": "objecthunt-d590f",
+    "storage_bucket": "objecthunt-d590f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1031977838302:android:693f60fdac7e09016e444f",
+        "android_client_info": {
+          "package_name": "org.redstudios.objecthunt"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1031977838302-pkjgnib61auid473khu9gil5755do7j1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.redstudios.objecthunt",
+            "certificate_hash": "438da0ab57cdce149f4bc6ae6a440f0b9063861c"
+          }
+        },
+        {
+          "client_id": "1031977838302-i6k00mrfsov3j4ujhdb5706qcdnrt62p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBSGSnJuZbfse1aXiCP6oajAhIXwZ_xIw4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1031977838302-i6k00mrfsov3j4ujhdb5706qcdnrt62p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
