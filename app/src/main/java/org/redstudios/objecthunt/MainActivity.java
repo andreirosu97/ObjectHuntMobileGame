@@ -1,10 +1,8 @@
 package org.redstudios.objecthunt;
 
 import android.os.Bundle;
-import android.view.MenuItem;
 
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -12,6 +10,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.redstudios.objecthunt.listeners.MenuItemSelectedListener;
+import org.redstudios.objecthunt.mainactivity_fragments.GameModeSelectFragment;
 
 public class MainActivity extends AppCompatActivity {
 

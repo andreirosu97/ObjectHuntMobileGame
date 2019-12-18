@@ -1,4 +1,4 @@
-package org.redstudios.objecthunt;
+package org.redstudios.objecthunt.mainactivity_fragments;
 
 import android.content.Context;
 import android.graphics.Rect;
@@ -15,6 +15,9 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
+
+import org.redstudios.objecthunt.model.ObjectsAdapter;
+import org.redstudios.objecthunt.R;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.redstudios.objecthunt;
+package org.redstudios.objecthunt.cameraactivity_fragments;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -53,6 +53,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import org.redstudios.objecthunt.R;
 import org.redstudios.objecthunt.customview.AutoFitTextureView;
 import org.redstudios.objecthunt.eviroment.Logger;
 

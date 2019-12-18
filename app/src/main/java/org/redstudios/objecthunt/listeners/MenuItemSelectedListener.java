@@ -5,10 +5,10 @@ import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import org.redstudios.objecthunt.GameModeSelectFragment;
-import org.redstudios.objecthunt.LeaderboardFragment;
+import org.redstudios.objecthunt.mainactivity_fragments.GameModeSelectFragment;
+import org.redstudios.objecthunt.mainactivity_fragments.LeaderboardFragment;
 import org.redstudios.objecthunt.MainActivity;
-import org.redstudios.objecthunt.ProfileFragment;
+import org.redstudios.objecthunt.mainactivity_fragments.ProfileFragment;
 import org.redstudios.objecthunt.R;
 
 import androidx.annotation.NonNull;

@@ -1,4 +1,4 @@
-package org.redstudios.objecthunt;
+package org.redstudios.objecthunt.cameraactivity_fragments;
 
 /*
  * Copyright 2019 The TensorFlow Authors. All Rights Reserved.
@@ -33,6 +33,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
+import org.redstudios.objecthunt.R;
 import org.redstudios.objecthunt.customview.AutoFitTextureView;
 import org.redstudios.objecthunt.eviroment.Logger;
 

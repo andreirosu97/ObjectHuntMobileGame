@@ -1,4 +1,4 @@
-package org.redstudios.objecthunt;
+package org.redstudios.objecthunt.mainactivity_fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.material.button.MaterialButton;
+
+import org.redstudios.objecthunt.ClassifierActivity;
+import org.redstudios.objecthunt.R;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

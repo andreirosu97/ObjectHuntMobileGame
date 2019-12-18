@@ -27,6 +27,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.redstudios.objecthunt.cameraactivity_fragments.CameraConnectionFragment;
+import org.redstudios.objecthunt.cameraactivity_fragments.LegacyCameraConnectionFragment;
 import org.redstudios.objecthunt.eviroment.ImageUtils;
 import org.redstudios.objecthunt.eviroment.Logger;
 import org.redstudios.objecthunt.tf.Classifier.*;

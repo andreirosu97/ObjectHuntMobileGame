@@ -1,4 +1,4 @@
-package org.redstudios.objecthunt;
+package org.redstudios.objecthunt.model;
 
 import android.app.Activity;
 import android.content.Context;
@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import org.redstudios.objecthunt.R;
 
 import java.util.List;
 
