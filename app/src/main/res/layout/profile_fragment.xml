@@ -28,12 +28,12 @@
                 android:id="@+id/TextViewName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
+                android:layout_gravity="center"
                 android:textAlignment="center"
                 android:text="Ardei Rosie"
                 android:textAppearance="@style/TextAppearance.ObjHunt.Profile.Title" />
             <EditText
-                android:id="@+id/hiddenEdiTName"
+                android:id="@+id/hiddenEditName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="Enter name"

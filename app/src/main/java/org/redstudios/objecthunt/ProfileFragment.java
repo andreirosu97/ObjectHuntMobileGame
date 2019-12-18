@@ -1,17 +1,14 @@
 package org.redstudios.objecthunt;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.text.InputType;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -50,7 +47,7 @@ public class ProfileFragment extends Fragment {
         listScores = (ListView) getActivity().findViewById(R.id.TopObjList);
         editButton = (ImageButton) getActivity().findViewById(R.id.EditNameButton);
         name = (TextView) getActivity().findViewById(R.id.TextViewName);
-        editName = (EditText) getActivity().findViewById(R.id.hiddenEdiTName);
+        editName = (EditText) getActivity().findViewById(R.id.hiddenEditName);
         switcher = (ViewSwitcher) getActivity().findViewById(R.id.nameSwitcher);
         touchInterceptor = (FrameLayout) getActivity().findViewById(R.id.touchInterceptor);
 
