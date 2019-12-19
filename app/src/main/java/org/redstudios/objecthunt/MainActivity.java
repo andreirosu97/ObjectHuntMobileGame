@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
                 .build();
         firebaseFirestore.setFirestoreSettings(settings);
         DocumentReference userDocument = firebaseFirestore.collection("users").document("yTuyWzQLLpodzNf3lOE1");
+
         AppState.get().setUserDocument(userDocument);
 
         if (savedInstanceState == null) {
@@ -43,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.nav_home);
         bottomNavigationView.setOnNavigationItemSelectedListener(new MenuItemSelectedListener(this));
+
+        AppState.get().setNavigationView(bottomNavigationView);
     }
 
     public void navigateTo(Fragment fragment, String tag, int enter_anim, int exit_anim) {

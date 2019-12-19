@@ -32,7 +32,7 @@
                 android:textAlignment="center"
                 android:text="Ardei Rosie"
                 android:textAppearance="@style/TextAppearance.ObjHunt.Profile.Title" />
-            <EditText
+            <org.redstudios.objecthunt.utils.EditTextV2
                 android:id="@+id/hiddenEditName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

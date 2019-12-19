@@ -1,13 +1,21 @@
 package org.redstudios.objecthunt.model;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
+import android.util.Pair;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 
+import org.redstudios.objecthunt.R;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 
@@ -22,6 +30,18 @@ public class AppState {
         }
         return singletonObject;
     }
+
+    @SuppressLint("UseSparseArrays")
+    private AppState() {
+        navigationTab = new HashMap<>();
+        navigationTab.put(R.id.nav_home, Pair.create(R.id.nav_profile, R.id.nav_leader));
+        navigationTab.put(R.id.nav_profile, Pair.create(null, R.id.nav_home));
+        navigationTab.put(R.id.nav_leader, Pair.create(R.id.nav_home, null));
+    }
+
+    @NonNull
+    private BottomNavigationView navigationView;
+    private Map<Integer, Pair<Integer, Integer>> navigationTab;
 
     private DocumentReference userDocument;
 
@@ -95,5 +115,26 @@ public class AppState {
     public void setObjectsFound(HashMap<String, Object> objectsFound) {
         //TODO update database
         this.objectsFound = objectsFound;
+    }
+
+    public List<Pair<String,String>> getListOfObjectsFound() {
+        List<Pair<String,String>> objList = new ArrayList<>();
+        for (String key : objectsFound.keySet()) {
+            objList.add(Pair.create(key,objectsFound.get(key).toString()));
+        }
+        return objList;
+    }
+
+    public void setListOfObjectsFound(List<Pair<String,String>> objectsFound) {
+        //TODO implement
+    }
+
+    @NonNull
+    public BottomNavigationView getNavigationView() {
+        return navigationView;
+    }
+
+    public void setNavigationView(@NonNull BottomNavigationView navigationView) {
+        this.navigationView = navigationView;
     }
 }

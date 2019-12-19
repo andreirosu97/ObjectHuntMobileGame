@@ -2,18 +2,19 @@ package org.redstudios.objecthunt.mainactivity_fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 
 import org.redstudios.objecthunt.ClassifierActivity;
 import org.redstudios.objecthunt.R;
 
+import java.util.Objects;
+
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 /**
@@ -21,39 +22,27 @@ import androidx.fragment.app.Fragment;
  */
 public class GameModeSelectFragment extends Fragment {
 
+    private View view;
+
     @Override
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.game_mode_select_fragment, container, false);
-        MaterialButton nextButton = view.findViewById(R.id.game_mode_button_1);
+        view = inflater.inflate(R.layout.game_mode_select_fragment, container, false);
 
-        // Set an error if the password is less than 8 characters.
-        nextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), ClassifierActivity.class);
-                startActivity(intent);
-                /*
-                if (!isPasswordValid(passwordEditText.getText())) {
-                    passwordTextInput.setError(getString(R.string.shr_error_password));
-                } else {
-                    passwordTextInput.setError(null); // Clear the error
-                    ((NavigationHost) getActivity()).navigateTo(new ProductGridFragment(), false); // Navigate to the next Fragment
-                }
-                */
-            }
+        MaterialButton nextButton = view.findViewById(R.id.game_mode_button_1);
+        MaterialButton nextButton2 = view.findViewById(R.id.game_mode_button_2);
+
+        nextButton.setOnClickListener((View view) -> {
+            Intent intent = new Intent(getActivity(), ClassifierActivity.class);
+            startActivity(intent);
+        });
+
+        nextButton2.setOnClickListener((View view) -> {
+                ((BottomNavigationView) Objects.requireNonNull(getActivity()).findViewById(R.id.bottom_navigation)).getSelectedItemId();
         });
 
 
         return view;
-    }
-
-    /*
-        In reality, this will have more complex logic including, but not limited to, actual
-        authentication of the username and password.
-     */
-    private boolean isPasswordValid(@Nullable Editable text) {
-        return text != null && text.length() >= 8;
     }
 }

@@ -18,7 +18,6 @@ public class LeaderboardFragment extends Fragment {
             @NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.leaderboard_fragment, container, false);
-
         return view;
     }
 
