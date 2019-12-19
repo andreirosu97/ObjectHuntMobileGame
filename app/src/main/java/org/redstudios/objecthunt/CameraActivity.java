@@ -87,7 +87,7 @@ public abstract class CameraActivity extends AppCompatActivity
                     openGameOverScreen();
                     return;
                 }
-                if (seconds >= 9 && timerTextView.getCurrentTextColor() != getResources().getColor(R.color.timerUnderTenSecColor))
+                if (seconds <= 9 && timerTextView.getCurrentTextColor() != getResources().getColor(R.color.timerUnderTenSecColor))
                     timerTextView.setTextColor(getResources().getColor(R.color.timerUnderTenSecColor));
             }
 

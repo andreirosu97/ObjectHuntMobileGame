@@ -243,6 +243,7 @@ public class Classifier {
         // Creates the post processor for the output probability.
         probabilityProcessor = new TensorProcessor.Builder().add(getPostprocessNormalizeOp()).build();
 
+        targetObjects = getSampleObjects(10);
         LOGGER.d("Created a Tensorflow Lite Image Classifier.");
     }
 
@@ -420,7 +421,7 @@ public class Classifier {
         labels = FileUtil.loadLabels(activity, getLabelPath());
 
     }
-//TO REIMPLEMENT
+//Raul
     public Float getTargetObjPercentage(){
         return target_perc;
     }
