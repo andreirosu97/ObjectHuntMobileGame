@@ -6,7 +6,6 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -23,14 +22,18 @@ import org.redstudios.objecthunt.R;
 import org.redstudios.objecthunt.model.AppState;
 import org.redstudios.objecthunt.model.ObjectsAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+
+import static androidx.constraintlayout.widget.Constraints.TAG;
 
 
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends Fragment implements Observer {
 
     private ListView listScores;
     private ImageButton editButton;
@@ -38,55 +41,51 @@ public class ProfileFragment extends Fragment {
     private TextView topScore;
     private EditText editName;
     private ViewSwitcher switcher;
-    private View view;
     private FrameLayout touchInterceptor;
 
     @Override
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.i(TAG, "Creating Profile view");
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.profile_fragment, container, false);
+        View view = inflater.inflate(R.layout.profile_fragment, container, false);
+        listScores = view.findViewById(R.id.TopObjList);
+        editButton = view.findViewById(R.id.EditNameButton);
+        name = view.findViewById(R.id.TextViewName);
+        topScore = view.findViewById(R.id.topScoreText);
+        editName = view.findViewById(R.id.hiddenEditName);
+        switcher = view.findViewById(R.id.nameSwitcher);
+        touchInterceptor = view.findViewById(R.id.touchInterceptor);
         return view;
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        listScores = getActivity().findViewById(R.id.TopObjList);
-        editButton = getActivity().findViewById(R.id.EditNameButton);
-        name = getActivity().findViewById(R.id.TextViewName);
-        topScore = getActivity().findViewById(R.id.topScoreText);
-        editName = getActivity().findViewById(R.id.hiddenEditName);
-        switcher = getActivity().findViewById(R.id.nameSwitcher);
-        touchInterceptor = getActivity().findViewById(R.id.touchInterceptor);
+        initializeListeners();
+        updateProfileData();
+        AppState.get().addObserver(this);
+    }
 
-        name.setText(AppState.get().getNickName());
-        editName.setText(AppState.get().getNickName());
-        topScore.setText(AppState.get().getTopScore().toString());
-
-        List<Pair<String, String>> arr2 = AppState.get().getListOfObjectsFound();
-        ObjectsAdapter l2Adapter = new ObjectsAdapter(getActivity(), R.layout.two_column_item_list, arr2);
-        listScores.setAdapter(l2Adapter);
-
+    @SuppressLint("ClickableViewAccessibility")
+    private void initializeListeners() {
         editButton.setOnClickListener((View view) -> {
             View switchCheck = switcher.getCurrentView();
-            if (switchCheck instanceof  EditText) {
+            if (switchCheck instanceof EditText) {
                 editName.clearFocus();
-            }
-            else {
+            } else {
                 switcher.showNext();
                 editName.requestFocus();
             }
         });
 
         editName.setOnFocusChangeListener((View view, boolean hasFocus) -> {
-
             if (!hasFocus) {
-                name.setText(editName.getText());
+                AppState.get().setNickName(editName.getText().toString());
                 switcher.showPrevious();
                 hideKeyboardFrom(view);
             } else {
+                editName.setSelection(editName.getText().length());
                 appearKeyboardFrom();
             }
         });
@@ -105,13 +104,44 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    public void hideKeyboardFrom(View view) {
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        AppState.get().deleteObserver(this);
     }
 
-    public void appearKeyboardFrom() {
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+    private void hideKeyboardFrom(View view) {
+        FragmentActivity activity = getActivity();
+        if (activity != null) {
+            InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (imm != null)
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    private void appearKeyboardFrom() {
+        FragmentActivity activity = getActivity();
+        if (activity != null) {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (imm != null)
+                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+        }
+    }
+
+    private void updateProfileData() {
+        if (getActivity() != null) {
+            name.setText(AppState.get().getNickName());
+            editName.setText(AppState.get().getNickName());
+            topScore.setText(String.format("%s", AppState.get().getTopScore().toString()));
+            List<Pair<String, String>> objectsFound = AppState.get().getListOfObjectsFound();
+            ObjectsAdapter objectsFoundAdapter = new ObjectsAdapter(this.getActivity(), R.layout.two_column_item_list, objectsFound);
+            listScores.setAdapter(objectsFoundAdapter);
+        }
+    }
+
+    @Override
+    public void update(Observable observable, Object o) {
+        Log.i(TAG, "Updating profile data.");
+        updateProfileData();
     }
 }

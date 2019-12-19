@@ -6,13 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 
 import org.redstudios.objecthunt.ClassifierActivity;
 import org.redstudios.objecthunt.R;
+import org.redstudios.objecthunt.model.AppState;
 
-import java.util.Objects;
+import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -39,7 +39,10 @@ public class GameModeSelectFragment extends Fragment {
         });
 
         nextButton2.setOnClickListener((View view) -> {
-                ((BottomNavigationView) Objects.requireNonNull(getActivity()).findViewById(R.id.bottom_navigation)).getSelectedItemId();
+            ArrayList<String> s = new ArrayList<>();
+            s.add("Mouse");
+            s.add("Tastatura");
+            AppState.get().addToObjetsFound(s);
         });
 
 
