@@ -1,27 +1,23 @@
 package org.redstudios.objecthunt.model;
 
-import android.annotation.SuppressLint;
 import android.util.Log;
 import android.util.Pair;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-
-import org.redstudios.objecthunt.R;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Observable;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
-public class AppState {
+public class AppState extends Observable {
     private static AppState singletonObject;
 
     public static synchronized AppState get() {
@@ -31,63 +27,56 @@ public class AppState {
         return singletonObject;
     }
 
-    @SuppressLint("UseSparseArrays")
-    private AppState() {
-        navigationTab = new HashMap<>();
-        navigationTab.put(R.id.nav_home, Pair.create(R.id.nav_profile, R.id.nav_leader));
-        navigationTab.put(R.id.nav_profile, Pair.create(null, R.id.nav_home));
-        navigationTab.put(R.id.nav_leader, Pair.create(R.id.nav_home, null));
-    }
-
-    @NonNull
-    private BottomNavigationView navigationView;
-    private Map<Integer, Pair<Integer, Integer>> navigationTab;
-
     private DocumentReference userDocument;
 
     //TODO convert this data into userAdapter for the database
     private String userId;
     private String nickName;
-    private Double topScore;
+    private Integer topScore;
     private HashMap<String, Object> objectsFound;
-
-    public DocumentReference getUserDocument() {
-        return userDocument;
-    }
 
     @SuppressWarnings("unchecked")
     public void setUserDocument(DocumentReference userDocument) {
         this.userDocument = userDocument;
-        userDocument.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                        userId = document.getId();
-                        nickName = document.getString("nickName");
-                        topScore = document.getDouble("topScore");
-                        objectsFound = (HashMap<String, Object>) document.get("objectsFound");
-                        Log.i("User Info", "User ID : " + userId);
-                        Log.i("User Info", "Nickname : " + nickName);
-                        Log.i("User Info", "TopScore : " + topScore);
-                        for (String key : objectsFound.keySet()) {
-                            Log.i("User Info", key + " was found " + objectsFound.get(key) + " times");
-                        }
+        userDocument.addSnapshotListener((@Nullable DocumentSnapshot document,
+                                          @Nullable FirebaseFirestoreException e) -> {
+            if (e != null) {
+                Log.w(TAG, "Listen failed.", e);
+                return;
+            }
 
-                    } else {
-                        Log.d(TAG, "No such document");
-                    }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
+            if (document != null && document.exists()) {
+                Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                userId = document.getId();
+                nickName = document.getString("nickName");
+                Double doubleTopScore = document.getDouble("topScore");
+                if (doubleTopScore != null) {
+                    topScore = doubleTopScore.intValue();
                 }
+                objectsFound = (HashMap<String, Object>) document.get("objectsFound");
+                Log.i("User Info", "User ID : " + userId);
+                Log.i("User Info", "Nickname : " + nickName);
+                Log.i("User Info", "TopScore : " + topScore);
+                for (String key : objectsFound.keySet()) {
+                    Log.i("User Info", key + " was found " + objectsFound.get(key) + " times");
+                }
+                this.setChanged();
+                notifyObservers();
+            } else {
+                Log.d(TAG, "Current data: null");
             }
         });
     }
 
-    public String getUserId() {
-        return userId;
+    private void updateDatabaseField(String fieldName, Object value) {
+        userDocument
+                .update(fieldName, value)
+                .addOnSuccessListener((Void aVoid) -> {
+                    Log.i(TAG, "Success on updating the " + fieldName);
+                    setChanged();
+                    notifyObservers();
+                })
+                .addOnFailureListener((@NonNull Exception e) -> Log.e(TAG, "Failed on updating the " + fieldName));
     }
 
     public String getNickName() {
@@ -95,46 +84,39 @@ public class AppState {
     }
 
     public void setNickName(String nickName) {
-        //TODO update database
         this.nickName = nickName;
+        updateDatabaseField("nickName", nickName);
     }
 
-    public Double getTopScore() {
+    public Integer getTopScore() {
         return topScore;
     }
 
-    public void setTopScore(Double topScore) {
-        //TODO update database
+    public void setTopScore(Integer topScore) {
         this.topScore = topScore;
+        updateDatabaseField("topScore", topScore);
     }
 
-    public HashMap<String, Object> getObjectsFound() {
-        return objectsFound;
+    public void addToObjetsFound(List<String> objectsFound) {
+        for (String objectName : objectsFound) {
+            Long value = (Long) this.objectsFound.get(objectName);
+            if (value != null) {
+                this.objectsFound.put(objectName, value + 1);
+            } else {
+                this.objectsFound.put(objectName, 1);
+            }
+        }
+        updateDatabaseField("objectsFound", this.objectsFound);
     }
 
-    public void setObjectsFound(HashMap<String, Object> objectsFound) {
-        //TODO update database
-        this.objectsFound = objectsFound;
-    }
-
-    public List<Pair<String,String>> getListOfObjectsFound() {
-        List<Pair<String,String>> objList = new ArrayList<>();
+    public List<Pair<String, String>> getListOfObjectsFound() {
+        List<Pair<String, String>> objList = new ArrayList<>();
         for (String key : objectsFound.keySet()) {
-            objList.add(Pair.create(key,objectsFound.get(key).toString()));
+            Object value = objectsFound.get(key);
+            if (value != null) {
+                objList.add(Pair.create(key, value.toString()));
+            }
         }
         return objList;
-    }
-
-    public void setListOfObjectsFound(List<Pair<String,String>> objectsFound) {
-        //TODO implement
-    }
-
-    @NonNull
-    public BottomNavigationView getNavigationView() {
-        return navigationView;
-    }
-
-    public void setNavigationView(@NonNull BottomNavigationView navigationView) {
-        this.navigationView = navigationView;
     }
 }

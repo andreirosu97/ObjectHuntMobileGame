@@ -2,11 +2,6 @@ package org.redstudios.objecthunt;
 
 import android.os.Bundle;
 
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -15,6 +10,10 @@ import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import org.redstudios.objecthunt.listeners.MenuItemSelectedListener;
 import org.redstudios.objecthunt.mainactivity_fragments.GameModeSelectFragment;
 import org.redstudios.objecthunt.model.AppState;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,7 +26,6 @@ public class MainActivity extends AppCompatActivity {
 
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
-                .setTimestampsInSnapshotsEnabled(true)
                 .build();
         firebaseFirestore.setFirestoreSettings(settings);
         DocumentReference userDocument = firebaseFirestore.collection("users").document("yTuyWzQLLpodzNf3lOE1");
@@ -44,8 +42,6 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.nav_home);
         bottomNavigationView.setOnNavigationItemSelectedListener(new MenuItemSelectedListener(this));
-
-        AppState.get().setNavigationView(bottomNavigationView);
     }
 
     public void navigateTo(Fragment fragment, String tag, int enter_anim, int exit_anim) {
