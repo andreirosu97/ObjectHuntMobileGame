@@ -23,5 +23,8 @@
     <string name="game_mode_button_2_text">Outdoor</string>
     <string name="game_mode_button_3_text">Office</string>
     <string name="game_mode_button_4_text">Madness</string>
+    <string name="game_over_challenge_text">Challenge</string>
+    <string name="game_over_play_text">Play</string>
+    <string name="game_over_Back_text">Back</string>
 
 </resources>

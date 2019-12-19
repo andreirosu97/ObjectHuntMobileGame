@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/pageBackground"
+    android:orientation="vertical"
+    android:padding="5dp">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:drawable/dialog_holo_light_frame"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="Game over"
+            android:textAppearance="@style/TextAppearance.ObjHunt.Profile.Title" />
+
+        <TextView
+            android:id="@+id/detected_item_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:paddingLeft="5dp"
+            android:text="...  You ran out of time"
+            android:textColor="@color/darkGray"
+            android:textSize="24dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:text="Total points: "
+            android:textColor="@color/darkGray"
+            android:textSize="24dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/TextViewPoints"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:textColor="@color/darkGray"
+            android:textSize="24dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@android:drawable/dialog_holo_light_frame"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingLeft="26dp"
+        android:paddingTop="26dp"
+        android:paddingRight="26dp"
+        android:paddingBottom="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="6dp"
+                android:text="Objects Found: "
+                android:textAppearance="@style/TextAppearance.ObjHunt.Profile.Simple.Dark.Text" />
+
+            <TextView
+                android:id="@+id/TextViewNrObj"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.ObjHunt.Profile.Simple.Dark.Text"
+                android:textSize="24dp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/ObjFoundList"
+            style="@style/Widget.ObjHunt.ListView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:background="@android:drawable/dialog_holo_light_frame"
+            android:padding="5dp" />
+
+        <Button
+            android:id="@+id/challengeButton"
+            style="@style/Widget.ObjHunt.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0"
+            android:text="@string/game_over_challenge_text"
+            android:textSize="24sp" />
+
+        <Button
+            android:id="@+id/playButton"
+            style="@style/Widget.ObjHunt.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0"
+            android:text="@string/game_over_play_text"
+            android:textSize="24sp" />
+
+        <Button
+            android:id="@+id/backButton"
+            style="@style/Widget.ObjHunt.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0"
+            android:text="@string/game_over_Back_text"
+            android:textSize="24sp" />
+    </LinearLayout>
+
+</LinearLayout>

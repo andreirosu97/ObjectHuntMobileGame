@@ -71,10 +71,9 @@ public class ProfileFragment extends Fragment {
 
         editButton.setOnClickListener((View view) -> {
             View switchCheck = switcher.getCurrentView();
-            if (switchCheck instanceof  EditText) {
+            if (switchCheck instanceof EditText) {
                 editName.clearFocus();
-            }
-            else {
+            } else {
                 switcher.showNext();
                 editName.requestFocus();
             }

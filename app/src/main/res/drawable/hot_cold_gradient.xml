@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
-    <padding android:top="@dimen/bottom_sheet_top_padding" />
-    <solid android:color="@color/pageBackground" />
+    <gradient
+        android:startColor="#02E6FD"
+        android:endColor="#F30707"
+        android:angle="45"/>
 </shape>

@@ -27,6 +27,7 @@
             </intent-filter>
         </activity>
         <activity android:name="org.redstudios.objecthunt.ClassifierActivity"></activity>
+        <activity android:name=".GameOverActivity" android:noHistory="true"></activity>
     </application>
 
 </manifest>

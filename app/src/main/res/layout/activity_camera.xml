@@ -12,7 +12,6 @@
         android:orientation="vertical">
 
         <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -27,10 +26,78 @@
             android:layout_alignParentTop="true"
             android:background="@color/semi_transparent">
 
-            <ImageView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/tfl2_logo" />
+                android:gravity="center_horizontal">
+
+                <TextView
+                    android:id="@+id/tv_target_obj"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Monitor"
+                    android:textAppearance="@style/TextAppearance.ObjHunt.Profile.Simple.Light.Text" />
+            </LinearLayout>
+        </androidx.appcompat.widget.Toolbar>
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar2"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_above="@+id/bottom_sheet_layout">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:paddingRight="10dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="2dp"
+                        android:src="@drawable/timer_icon" />
+
+                    <TextView
+                        android:id="@+id/tv_timer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.ObjHunt.Profile.Simple.Light.Text"
+                        android:textSize="24dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="2dp"
+                        android:src="@drawable/points_icon" />
+
+                    <TextView
+                        android:id="@+id/tv_points"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="0 pts"
+                        android:textAppearance="@style/TextAppearance.ObjHunt.Profile.Simple.Light.Text"
+                        android:textSize="24dp" />
+                </LinearLayout>
+            </RelativeLayout>
         </androidx.appcompat.widget.Toolbar>
 
         <include
