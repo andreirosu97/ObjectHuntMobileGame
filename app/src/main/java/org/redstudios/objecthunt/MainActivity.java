@@ -22,12 +22,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //TODO make app not start before authentification
-
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
                 .build();
         firebaseFirestore.setFirestoreSettings(settings);
+
         DocumentReference userDocument = firebaseFirestore.collection("users").document("yTuyWzQLLpodzNf3lOE1");
 
         AppState.get().setUserDocument(userDocument);
@@ -46,9 +45,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void navigateTo(Fragment fragment, String tag, int enter_anim, int exit_anim) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.setCustomAnimations(enter_anim, exit_anim,enter_anim, exit_anim);
+        transaction.setCustomAnimations(enter_anim, exit_anim, enter_anim, exit_anim);
         transaction.replace(R.id.fragment_container, fragment, tag);
         transaction.commit();
     }
 }
+
 

@@ -13,9 +13,10 @@
         <item name="android:colorControlHighlight">@color/rippleColorButtons</item>
     </style>
 
-<!--    Text Input   -->
+    <!--    Text Input   -->
     <style name="Widget.ObjHunt.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-        <item name="hintTextAppearance">@style/TextAppearance.ObjHunt.TextInputLayout.HintText</item>
+        <item name="hintTextAppearance">@style/TextAppearance.ObjHunt.TextInputLayout.HintText
+        </item>
         <item name="hintTextColor">@color/textColorPrimary</item>
         <item name="android:paddingBottom">8dp</item>
         <item name="boxStrokeColor">@color/textInputOutlineColor</item>
@@ -25,9 +26,9 @@
         <item name="android:textColor">?android:attr/textColorPrimary</item>
     </style>
 
-<!--    End Text Input  -->
+    <!--    End Text Input  -->
 
-<!--    Clickable   -->
+    <!--    Clickable   -->
     <style name="Widget.ObjHunt.Button" parent="Widget.MaterialComponents.Button">
         <item name="android:textColor">?android:attr/textColorPrimary</item>
         <item name="backgroundTint">?attr/colorPrimaryDark</item>
@@ -43,7 +44,7 @@
         <item name="itemTextColor">@drawable/bottom_navigation_item_color</item>
     </style>
 
-<!--    End Clickable  -->
+    <!--    End Clickable  -->
 
     <style name="TextAppearance.ObjHunt.Title" parent="TextAppearance.MaterialComponents.Headline4">
         <item name="textAllCaps">true</item>
@@ -55,21 +56,21 @@
         <item name="textAllCaps">false</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/casualTextColor</item>
-        <item name="android:textSize">30dp</item>
+        <item name="android:textSize">30sp</item>
     </style>
 
     <style name="TextAppearance.ObjHunt.Profile.Simple.Dark.Text" parent="TextAppearance.MaterialComponents.Headline4">
         <item name="textAllCaps">false</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/colorPrimaryDark</item>
-        <item name="android:textSize">30dp</item>
+        <item name="android:textSize">30sp</item>
     </style>
 
     <style name="TextAppearance.ObjHunt.Profile.Simple.Light.Text" parent="TextAppearance.MaterialComponents.Headline4">
         <item name="textAllCaps">false</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@android:color/white</item>
-        <item name="android:textSize">30dp</item>
+        <item name="android:textSize">30sp</item>
     </style>
 
     <style name="CustomToolBar" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
@@ -78,12 +79,21 @@
     </style>
 
     <style name="Widget.ObjHunt.ListView" parent="Widget.AppCompat.ListView">
-        <item name="android:backgroundTint">@color/colorPrimaryDark </item>
+        <item name="android:backgroundTint">@color/colorPrimaryDark</item>
         <item name="android:cacheColorHint">@android:color/transparent</item>
         <item name="android:divider">@color/colorAccent</item>
         <item name="android:dividerHeight">2dp</item>
         <item name="android:textStyle">bold</item>
     </style>
-    
+
+    <style name="Theme.ObjHunt.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.ObjHunt.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.ObjHunt.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
 </resources>
 

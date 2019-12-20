@@ -3,6 +3,7 @@ package org.redstudios.objecthunt.model;
 import android.util.Log;
 import android.util.Pair;
 
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -28,6 +29,7 @@ public class AppState extends Observable {
     }
 
     private DocumentReference userDocument;
+    private FirebaseUser activeUser;
 
     //TODO convert this data into userAdapter for the database
     private String userId;
@@ -66,6 +68,14 @@ public class AppState extends Observable {
                 Log.d(TAG, "Current data: null");
             }
         });
+    }
+
+    public FirebaseUser getActiveUser() {
+        return activeUser;
+    }
+
+    public void setActiveUser(FirebaseUser activeUser) {
+        this.activeUser = activeUser;
     }
 
     private void updateDatabaseField(String fieldName, Object value) {

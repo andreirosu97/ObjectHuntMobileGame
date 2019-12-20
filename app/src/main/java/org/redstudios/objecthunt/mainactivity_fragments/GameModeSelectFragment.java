@@ -45,7 +45,6 @@ public class GameModeSelectFragment extends Fragment {
             AppState.get().addToObjetsFound(s);
         });
 
-
         return view;
     }
 }
