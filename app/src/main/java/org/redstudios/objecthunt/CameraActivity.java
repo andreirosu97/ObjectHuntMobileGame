@@ -1,6 +1,5 @@
 package org.redstudios.objecthunt;
 
-import android.Manifest;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
@@ -44,12 +43,8 @@ public abstract class CameraActivity extends AppCompatActivity
         implements OnImageAvailableListener,
         Camera.PreviewCallback {
 
-    private static final int PERMISSIONS_REQUEST = 1;
-
     private static final Logger LOGGER = new Logger();
 
-
-    private static final String PERMISSION_CAMERA = Manifest.permission.CAMERA;
     protected int previewWidth = 0;
     protected int previewHeight = 0;
     private Handler handler;

@@ -98,16 +98,12 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AlertDialogStyle" parent="Theme.MaterialComponents.Dialog.Alert">
-        <item name="android:colorAccent">@color/colorAccent</item>
-        <item name="android:textColor">@color/colorPrimary</item>
+    <style name="AlertDialogStyle" parent="Theme.AppCompat.Dialog">
+        <item name="android:colorAccent">#800808</item>
+        <item name="android:textColor">#800808</item>
         <item name="android:textColorPrimary">@color/colorPrimaryDark</item>
-        <item name="buttonBarNeutralButtonStyle">@style/NeutralButtonStyle</item>
     </style>
 
-    <style name="NeutralButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
-        <item name="android:textColor">#00f</item>
-    </style>
 
     <style name="Theme.ObjHunt.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 

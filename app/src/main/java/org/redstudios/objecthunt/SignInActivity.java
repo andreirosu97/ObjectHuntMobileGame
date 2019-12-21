@@ -1,7 +1,10 @@
 package org.redstudios.objecthunt;
 
 import android.Manifest;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -30,8 +33,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import static com.google.android.gms.common.api.CommonStatusCodes.NETWORK_ERROR;
 
 public class SignInActivity extends AppCompatActivity {
-
-    private FirebaseAuth mAuth;
 
     private static final String PERMISSION_CAMERA = Manifest.permission.CAMERA;
     private GoogleSignInClient mGoogleSignInClient;
@@ -197,14 +198,30 @@ public class SignInActivity extends AppCompatActivity {
         builder.setTitle("Network Error");
         builder.setMessage("Please connect your device to the internet and retry.");
         DialogInterface.OnClickListener dialogClickListener = (DialogInterface dialog, int which) -> {
-            if (DialogInterface.BUTTON_NEUTRAL == which) {
+            if (DialogInterface.BUTTON_POSITIVE == which) {
                 //TODO restart app
                 Log.d("SignInTAG", "Restarting app");
+                Intent mStartActivity = new Intent(SignInActivity.this, SignInActivity.class);
+                int mPendingIntentId = 123456;
+                PendingIntent mPendingIntent = PendingIntent.getActivity(SignInActivity.this, mPendingIntentId, mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
+                AlarmManager mgr = (AlarmManager) SignInActivity.this.getSystemService(Context.ALARM_SERVICE);
+                mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 20, mPendingIntent);
+                System.exit(0);
             }
         };
+
+        DialogInterface.OnDismissListener dismissListener = (new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                System.exit(0);
+            }
+        });
+
         builder.setPositiveButton("Restart app", dialogClickListener);
+        builder.setOnDismissListener(dismissListener);
 
         AlertDialog dialog = builder.create();
+
         // Display the alert dialog on interface
         dialog.show();
     }
