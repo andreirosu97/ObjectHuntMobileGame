@@ -6,6 +6,7 @@ import android.util.Pair;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ public class AppState extends Observable {
     }
 
     private DocumentReference userDocument;
+    private FirebaseFirestore firebaseFirestore;
     private FirebaseUser activeUser;
 
     //TODO convert this data into userAdapter for the database
@@ -72,6 +74,10 @@ public class AppState extends Observable {
 
     public FirebaseUser getActiveUser() {
         return activeUser;
+    }
+
+    public void setFirebaseFirestore(FirebaseFirestore firebaseFirestore) {
+        this.firebaseFirestore = firebaseFirestore;
     }
 
     public void setActiveUser(FirebaseUser activeUser) {

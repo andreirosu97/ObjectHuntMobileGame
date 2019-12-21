@@ -79,6 +79,8 @@ public class SignInActivity extends AppCompatActivity {
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
                 .build();
         firebaseFirestore.setFirestoreSettings(settings);
+
+        AppState.get().setFirebaseFirestore(firebaseFirestore);
         FirebaseUser user = AppState.get().getActiveUser();
 
         DocumentReference userDocument = firebaseFirestore.collection("users").document(user.getUid());
