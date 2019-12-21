@@ -427,8 +427,8 @@ public class Classifier {
         return target_perc;
     }
 
-    public void popPeekObject() {
-        targetObjects.remove();
+    public String popPeekObject() {
+        return targetObjects.remove();
     }
 
     public String getPeekObject() {

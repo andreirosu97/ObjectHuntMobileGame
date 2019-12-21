@@ -14,9 +14,11 @@
         android:fullBackupContent="true"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
+        android:screenOrientation="portrait"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_foreground"
         android:supportsRtl="true"
+        android:configChanges="orientation"
         android:theme="@style/Theme.ObjHunt"
         tools:ignore="GoogleAppIndexingWarning">
         <meta-data
@@ -39,9 +41,12 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
 
-        <activity android:name=".ClassifierActivity" />
+        <activity
+            android:name=".ClassifierActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".GameOverActivity"
+            android:screenOrientation="portrait"
             android:noHistory="true" />
     </application>
 

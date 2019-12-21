@@ -33,6 +33,7 @@ import org.redstudios.objecthunt.eviroment.Logger;
 import org.redstudios.objecthunt.tf.Classifier.Recognition;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.UiThread;
@@ -44,6 +45,7 @@ public abstract class CameraActivity extends AppCompatActivity
         Camera.PreviewCallback {
 
     private static final Logger LOGGER = new Logger();
+    private static final int GAME_OVER_REQUEST_CODE = 420;
 
     protected int previewWidth = 0;
     protected int previewHeight = 0;
@@ -65,6 +67,8 @@ public abstract class CameraActivity extends AppCompatActivity
             timerTextView,
             pointsTextView;
 
+    protected ArrayList<String> foundObjects = new ArrayList<>();
+    protected Integer totalCurrentPoints = 0;
     int timeLimit = 20;
     Handler timerHandler = new Handler();
     Runnable timerRunnable = new Runnable() {
@@ -432,7 +436,7 @@ public abstract class CameraActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 420)
+        if (requestCode == GAME_OVER_REQUEST_CODE)
             switch (resultCode) {
                 case RESULT_CANCELED:
                     finish();
@@ -452,23 +456,28 @@ public abstract class CameraActivity extends AppCompatActivity
 
     @UiThread
     protected void updateTextViewTargetObject(String peekObject) {
-        textViewTargetObject.setText(peekObject);
+        if (peekObject != "") {
+            textViewTargetObject.setText(peekObject);
+        }
     }
 
     @UiThread
-    public void addPoints(int points) {
-        pointsTextView.setText(points + " pts");
+    public void updateTotalPoints() {
+        pointsTextView.setText(totalCurrentPoints.toString() + " pts");
     }
 
-    @UiThread
     public int getCurrentPoints() {
-        String points = (String) pointsTextView.getText();
-        return Integer.parseInt(points.substring(0, points.length() - 4));
+        return totalCurrentPoints;
     }
 
     protected void openGameOverScreen() {
         Intent intent = new Intent(this, GameOverActivity.class);
-        startActivityForResult(intent, 420);
+        Bundle gameResult = new Bundle();
+        gameResult.putInt("Points", getCurrentPoints());
+        Log.d("RAUL", "Avem : " + foundObjects.size());
+        gameResult.putStringArrayList("FoundObjects", foundObjects);
+        intent.putExtras(gameResult);
+        startActivityForResult(intent, GAME_OVER_REQUEST_CODE);
     }
 
     public void setTimeLimit(int time) {

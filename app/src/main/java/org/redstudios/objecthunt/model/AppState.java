@@ -109,8 +109,10 @@ public class AppState extends Observable {
     }
 
     public void setTopScore(Integer topScore) {
-        this.topScore = topScore;
-        updateDatabaseField("topScore", topScore);
+        if (topScore.compareTo(this.topScore) == 1) {
+            this.topScore = topScore;
+            updateDatabaseField("topScore", topScore);
+        }
     }
 
     public void addToObjetsFound(List<String> objectsFound) {
