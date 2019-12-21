@@ -24,6 +24,8 @@ public class ClassifierActivity extends CameraActivity implements OnImageAvailab
   private Integer sensorOrientation;
   private Classifier classifier;
   private BorderedText borderedText;
+    private int tresholdAccuracy = 60;
+    private int foundObjs = 0;
 
   @Override
   protected int getLayoutId() {
@@ -59,7 +61,6 @@ public class ClassifierActivity extends CameraActivity implements OnImageAvailab
     LOGGER.i("Initializing at size %dx%d", previewWidth, previewHeight);
     rgbFrameBitmap = Bitmap.createBitmap(previewWidth, previewHeight, Config.ARGB_8888);
   }
-
   @Override
   protected void processImage() {
     LOGGER.d("processImage");
@@ -67,6 +68,14 @@ public class ClassifierActivity extends CameraActivity implements OnImageAvailab
     final int imageSizeX = classifier.getImageSizeX();
     final int imageSizeY = classifier.getImageSizeY();
     final int cropSize = Math.min(previewWidth, previewHeight);
+      int targetObjPercentage = (int) (float) classifier.getTargetObjPercentage();
+
+      if (targetObjPercentage > tresholdAccuracy) {
+          classifier.popPeekObject();
+          if (classifier.checkEmptyQueue())
+              openGameOverScreen();
+          foundObjs++;
+      }
 
     runInBackground(
         new Runnable() {
@@ -83,6 +92,11 @@ public class ClassifierActivity extends CameraActivity implements OnImageAvailab
                     @Override
                     public void run() {
                       showResultsInBottomSheet(results);
+                        updateProgressBar(targetObjPercentage);
+                        if (targetObjPercentage > tresholdAccuracy) {
+                            addPoints(getCurrentPoints() + 100 + foundObjs * 25);
+                            updateTextViewTargetObject(classifier.getPeekObject());
+                        }
                     }
                   });
             }
@@ -97,7 +111,6 @@ public class ClassifierActivity extends CameraActivity implements OnImageAvailab
       // Defer creation until we're getting camera frames.
       return;
     }
-
     runInBackground(() -> recreateClassifier());
   }
 
@@ -111,6 +124,8 @@ public class ClassifierActivity extends CameraActivity implements OnImageAvailab
       LOGGER.d(
           "Creating classifier (numThreads=2)");
       classifier = new Classifier(this, GameMode.OFFICE);
+        updateProgressBar(0);
+        updateTextViewTargetObject(classifier.getPeekObject());
     } catch (IOException e) {
       LOGGER.e(e, "Failed to create classifier.");
     }

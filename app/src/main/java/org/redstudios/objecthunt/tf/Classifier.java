@@ -33,6 +33,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
+import java.util.Queue;
 
 import static android.content.ContentValues.TAG;
 
@@ -44,6 +45,8 @@ public class Classifier {
      * The quantized model does not require normalization, thus set mean as 0.0f, and std as 1.0f to
      * bypass the normalization.
      */
+    private Float target_perc = 0.0f;
+    Queue<String> targetObjects;
     private static final float IMAGE_MEAN = 0.0f;
 
     private static final float IMAGE_STD = 1.0f;
@@ -240,6 +243,7 @@ public class Classifier {
         // Creates the post processor for the output probability.
         probabilityProcessor = new TensorProcessor.Builder().add(getPostprocessNormalizeOp()).build();
 
+        targetObjects = getSampleObjects(10);
         LOGGER.d("Created a Tensorflow Lite Image Classifier.");
     }
 
@@ -272,14 +276,12 @@ public class Classifier {
                 new TensorLabel(labels, probabilityProcessor.process(outputProbabilityBuffer))
                         .getMapWithFloatValue();
 
-        int i = 0;
         for (Map.Entry<String, Float> entry : labeledProbability.entrySet()) {
             String k = entry.getKey();
             Float v = entry.getValue();
-            System.out.println("Key: " + k + ", Value: " + v);
-            i++;
-            if (i == 5)
-                break;
+            if (k.equals(targetObjects.peek())) {
+                target_perc = 100 * v;
+            }
         }
         Trace.endSection();
 
@@ -418,5 +420,41 @@ public class Classifier {
             ;//TODO read from outdoor file
         labels = FileUtil.loadLabels(activity, getLabelPath());
 
+    }
+
+    //Raul
+    public Float getTargetObjPercentage() {
+        return target_perc;
+    }
+
+    public void popPeekObject() {
+        targetObjects.remove();
+    }
+
+    public String getPeekObject() {
+        return targetObjects.peek();
+    }
+
+    public Boolean checkEmptyQueue() {
+        return targetObjects.isEmpty();
+    }
+
+
+    public Queue<String> getSampleObjects(int numberOfObjects) {
+        Queue<String> sample = new PriorityQueue<>();
+        sample.add("mouse");
+        sample.add("monitor");
+        sample.add("computer keyboard");
+        return sample;
+
+//        for(int i=0; i<=numberOfObjects; i++) {
+//            String obj = labels.get(new Random().nextInt(labels.size()));
+//            if(sample.contains(obj)){
+//                i--;
+//                continue;
+//            }
+//            sample.add(obj);
+//        }
+//        return sample;
     }
 }

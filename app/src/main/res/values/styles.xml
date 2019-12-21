@@ -73,6 +73,13 @@
         <item name="android:textSize">30sp</item>
     </style>
 
+    <style name="TextAppearance.ObjHunt.Light.Title" parent="TextAppearance.MaterialComponents.Headline4">
+        <item name="textAllCaps">false</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/backgroundText</item>
+        <item name="android:textSize">40dp</item>
+    </style>
+
     <style name="CustomToolBar" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:windowActionBarOverlay">true</item>
         <item name="windowActionBarOverlay">true</item>
@@ -89,6 +96,17 @@
     <style name="Theme.ObjHunt.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AlertDialogStyle" parent="Theme.MaterialComponents.Dialog.Alert">
+        <item name="android:colorAccent">@color/colorAccent</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textColorPrimary">@color/colorPrimaryDark</item>
+        <item name="buttonBarNeutralButtonStyle">@style/NeutralButtonStyle</item>
+    </style>
+
+    <style name="NeutralButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">#00f</item>
     </style>
 
     <style name="Theme.ObjHunt.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

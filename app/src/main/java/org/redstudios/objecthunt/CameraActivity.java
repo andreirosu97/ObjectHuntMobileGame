@@ -3,7 +3,7 @@ package org.redstudios.objecthunt;
 import android.Manifest;
 import android.app.Fragment;
 import android.content.Context;
-import android.content.pm.PackageManager;
+import android.content.Intent;
 import android.hardware.Camera;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCharacteristics;
@@ -24,14 +24,14 @@ import android.view.Surface;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.redstudios.objecthunt.cameraactivity_fragments.CameraConnectionFragment;
 import org.redstudios.objecthunt.cameraactivity_fragments.LegacyCameraConnectionFragment;
 import org.redstudios.objecthunt.eviroment.ImageUtils;
 import org.redstudios.objecthunt.eviroment.Logger;
-import org.redstudios.objecthunt.tf.Classifier.*;
+import org.redstudios.objecthunt.tf.Classifier.Recognition;
 
 import java.nio.ByteBuffer;
 import java.util.List;
@@ -63,12 +63,36 @@ public abstract class CameraActivity extends AppCompatActivity
     private Runnable imageConverter;
     private LinearLayout bottomSheetLayout;
     private LinearLayout gestureLayout;
+    protected ProgressBar closenessProgressBar;
     protected TextView recognitionTextView,
-            recognition1TextView,
-            recognition2TextView,
             recognitionValueTextView,
-            recognition1ValueTextView,
-            recognition2ValueTextView;
+            textViewTargetObject,
+            timerTextView,
+            pointsTextView;
+
+    int timeLimit = 20;
+    Handler timerHandler = new Handler();
+    Runnable timerRunnable = new Runnable() {
+        @Override
+        public void run() {
+            timeLimit = timeLimit - 1;
+            int seconds = timeLimit;
+            int minutes = seconds / 60;
+            seconds = seconds % 60;
+
+            if (minutes == 0) {
+                if (seconds == 0) {
+                    openGameOverScreen();
+                    return;
+                }
+                if (seconds <= 9 && timerTextView.getCurrentTextColor() != getResources().getColor(R.color.timerUnderTenSecColor))
+                    timerTextView.setTextColor(getResources().getColor(R.color.timerUnderTenSecColor));
+            }
+
+            timerTextView.setText(String.format("%d:%02d", minutes, seconds) + "s");
+            timerHandler.postDelayed(this, 1000);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,14 +105,10 @@ public abstract class CameraActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        if (hasPermission()) {
-            setFragment();
-        } else {
-            requestPermission();
-        }
+        setFragment();
 
         bottomSheetLayout = findViewById(R.id.bottom_sheet_layout);
-        gestureLayout = findViewById(R.id.gesture_layout);
+        gestureLayout = findViewById(R.id.what_i_see_layout);
 
         ViewTreeObserver vto = gestureLayout.getViewTreeObserver();
         vto.addOnGlobalLayoutListener(
@@ -105,10 +125,10 @@ public abstract class CameraActivity extends AppCompatActivity
 
         recognitionTextView = findViewById(R.id.detected_item);
         recognitionValueTextView = findViewById(R.id.detected_item_value);
-        recognition1TextView = findViewById(R.id.detected_item1);
-        recognition1ValueTextView = findViewById(R.id.detected_item1_value);
-        recognition2TextView = findViewById(R.id.detected_item2);
-        recognition2ValueTextView = findViewById(R.id.detected_item2_value);
+        closenessProgressBar = findViewById(R.id.hot_cold_progress_bar);
+        textViewTargetObject = findViewById(R.id.tv_target_obj);
+        timerTextView = findViewById(R.id.tv_timer);
+        pointsTextView = findViewById(R.id.tv_points);
     }
 
     protected int[] getRgbBytes() {
@@ -251,13 +271,15 @@ public abstract class CameraActivity extends AppCompatActivity
         handlerThread = new HandlerThread("inference");
         handlerThread.start();
         handler = new Handler(handlerThread.getLooper());
+        timerHandler.postDelayed(timerRunnable, 0);
     }
 
     @Override
     public synchronized void onPause() {
         LOGGER.d("onPause " + this);
-
         handlerThread.quitSafely();
+        timerHandler.removeCallbacks(timerRunnable);
+
         try {
             handlerThread.join();
             handlerThread = null;
@@ -284,41 +306,6 @@ public abstract class CameraActivity extends AppCompatActivity
     protected synchronized void runInBackground(final Runnable r) {
         if (handler != null) {
             handler.post(r);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(
-            final int requestCode, final String[] permissions, final int[] grantResults) {
-        if (requestCode == PERMISSIONS_REQUEST) {
-            if (grantResults.length > 0
-                    && grantResults[0] == PackageManager.PERMISSION_GRANTED
-                    && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                setFragment();
-            } else {
-                requestPermission();
-            }
-        }
-    }
-
-    private boolean hasPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            return checkSelfPermission(PERMISSION_CAMERA) == PackageManager.PERMISSION_GRANTED;
-        } else {
-            return true;
-        }
-    }
-
-    private void requestPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (shouldShowRequestPermissionRationale(PERMISSION_CAMERA)) {
-                Toast.makeText(
-                        CameraActivity.this,
-                        "Camera permission is required for this demo",
-                        Toast.LENGTH_LONG)
-                        .show();
-            }
-            requestPermissions(new String[]{PERMISSION_CAMERA}, PERMISSIONS_REQUEST);
         }
     }
 
@@ -441,25 +428,54 @@ public abstract class CameraActivity extends AppCompatActivity
                     recognitionValueTextView.setText(
                             String.format("%.2f", (100 * recognition.getConfidence())) + "%");
             }
-
-            Recognition recognition1 = results.get(1);
-            if (recognition1 != null) {
-                if (recognition1.getTitle() != null)
-                    recognition1TextView.setText(recognition1.getTitle());
-                if (recognition1.getConfidence() != null)
-                    recognition1ValueTextView.setText(
-                            String.format("%.2f", (100 * recognition1.getConfidence())) + "%");
-            }
-
-            Recognition recognition2 = results.get(2);
-            if (recognition2 != null) {
-                if (recognition2.getTitle() != null)
-                    recognition2TextView.setText(recognition2.getTitle());
-                if (recognition2.getConfidence() != null)
-                    recognition2ValueTextView.setText(
-                            String.format("%.2f", (100 * recognition2.getConfidence())) + "%");
-            }
         }
+
+    }
+
+    //TO REIMPLEMENT
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 420)
+            switch (resultCode) {
+                case RESULT_CANCELED:
+                    finish();
+                    break;
+                case RESULT_OK:
+                    Intent intent = getIntent();
+                    finish();
+                    startActivity(intent);
+                    break;
+            }
+    }
+
+    @UiThread
+    protected void updateProgressBar(int targetObjPercentage) {
+        closenessProgressBar.setProgress(100 - targetObjPercentage);
+    }
+
+    @UiThread
+    protected void updateTextViewTargetObject(String peekObject) {
+        textViewTargetObject.setText(peekObject);
+    }
+
+    @UiThread
+    public void addPoints(int points) {
+        pointsTextView.setText(points + " pts");
+    }
+
+    @UiThread
+    public int getCurrentPoints() {
+        String points = (String) pointsTextView.getText();
+        return Integer.parseInt(points.substring(0, points.length() - 4));
+    }
+
+    protected void openGameOverScreen() {
+        Intent intent = new Intent(this, GameOverActivity.class);
+        startActivityForResult(intent, 420);
+    }
+
+    public void setTimeLimit(int time) {
+        timeLimit = time;
     }
 
     protected abstract void processImage();

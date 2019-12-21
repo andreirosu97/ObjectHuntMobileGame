@@ -1,8 +1,11 @@
 package org.redstudios.objecthunt;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -30,23 +33,76 @@ public class SignInActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
 
+    private static final String PERMISSION_CAMERA = Manifest.permission.CAMERA;
     private GoogleSignInClient mGoogleSignInClient;
     private GoogleSignInOptions gso;
-    private int RC_SIGN_IN = 1;
+    private static final int RC_SIGN_IN = 1;
+    private static final int PERMISSIONS_REQUEST = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
+        if (hasPermission()) {
+            startSignIn();
+        } else {
+            requestPermission();
+        }
+    }
+
+    private void startSignIn() {
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN)
                 .requestServerAuthCode(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
         signInSilently();
     }
+
+    private void launchApplication() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(
+            final int requestCode, final String[] permissions, final int[] grantResults) {
+        if (requestCode == PERMISSIONS_REQUEST) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                startSignIn();
+            } else {
+                requestPermission();
+            }
+        }
+    }
+
+    private boolean hasPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return checkSelfPermission(PERMISSION_CAMERA) == PackageManager.PERMISSION_GRANTED;
+        } else {
+            return true;
+        }
+    }
+
+    private void requestPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (shouldShowRequestPermissionRationale(PERMISSION_CAMERA)) {
+                Toast.makeText(
+                        SignInActivity.this,
+                        "Camera permission is required for this app.",
+                        Toast.LENGTH_LONG)
+                        .show();
+            }
+            requestPermissions(new String[]{PERMISSION_CAMERA}, PERMISSIONS_REQUEST);
+        }
+    }
+
+
+
+
+    /*Sign in*/
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -130,17 +186,14 @@ public class SignInActivity extends AppCompatActivity {
         Log.d("SignInTAG", "firebaseAuthWithPlayGames:" + account.getServerAuthCode());
     }
 
-    private void launchApplication() {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-    }
+    /*ERROR HANDLING*/
 
     private void toastError(String message) {
         Toast.makeText(SignInActivity.this, message, Toast.LENGTH_SHORT).show();
     }
 
     private void startErrorDialogNetworkError() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(SignInActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(SignInActivity.this, R.style.AlertDialogStyle);
         builder.setTitle("Network Error");
         builder.setMessage("Please connect your device to the internet and retry.");
         DialogInterface.OnClickListener dialogClickListener = (DialogInterface dialog, int which) -> {
