@@ -3,13 +3,9 @@ package org.redstudios.objecthunt;
 import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
 import org.redstudios.objecthunt.listeners.MenuItemSelectedListener;
 import org.redstudios.objecthunt.mainactivity_fragments.GameModeSelectFragment;
-import org.redstudios.objecthunt.model.AppState;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -21,15 +17,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
-                .build();
-        firebaseFirestore.setFirestoreSettings(settings);
-
-        DocumentReference userDocument = firebaseFirestore.collection("users").document("yTuyWzQLLpodzNf3lOE1");
-
-        AppState.get().setUserDocument(userDocument);
 
         if (savedInstanceState == null) {
             getSupportFragmentManager()

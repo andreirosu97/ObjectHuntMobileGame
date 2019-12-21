@@ -25,8 +25,14 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PlayGamesAuthProvider;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
 import org.redstudios.objecthunt.model.AppState;
+
+import java.util.HashMap;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,6 +41,7 @@ import static com.google.android.gms.common.api.CommonStatusCodes.NETWORK_ERROR;
 
 public class SignInActivity extends AppCompatActivity {
 
+    private static final String TAG = "SignInTAG";
     private static final String PERMISSION_CAMERA = Manifest.permission.CAMERA;
     private GoogleSignInClient mGoogleSignInClient;
     private GoogleSignInOptions gso;
@@ -68,6 +75,33 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     private void launchApplication() {
+        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .build();
+        firebaseFirestore.setFirestoreSettings(settings);
+        FirebaseUser user = AppState.get().getActiveUser();
+
+        DocumentReference userDocument = firebaseFirestore.collection("users").document(user.getUid());
+
+        userDocument.get().addOnCompleteListener((@NonNull Task<DocumentSnapshot> task) -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                } else {
+                    Log.d(TAG, "No such user, creating it.");
+                    HashMap<String, Object> dataStructure = new HashMap<>();
+                    dataStructure.put("nickName", user.getDisplayName());
+                    dataStructure.put("topScore", 0);
+                    dataStructure.put("objectsFound", new HashMap<>());
+                    firebaseFirestore.collection("users").document(user.getUid()).set(dataStructure);
+                }
+            } else {
+                Log.d(TAG, "get failed with ", task.getException());
+            }
+        });
+        AppState.get().setUserDocument(userDocument);
+
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
@@ -208,7 +242,6 @@ public class SignInActivity extends AppCompatActivity {
         builder.setMessage("Please connect your device to the internet and retry.");
         DialogInterface.OnClickListener dialogClickListener = (DialogInterface dialog, int which) -> {
             if (DialogInterface.BUTTON_POSITIVE == which) {
-                //TODO restart app
                 Log.d("SignInTAG", "Restarting app");
                 Intent mStartActivity = new Intent(SignInActivity.this, SignInActivity.class);
                 int mPendingIntentId = 123456;
