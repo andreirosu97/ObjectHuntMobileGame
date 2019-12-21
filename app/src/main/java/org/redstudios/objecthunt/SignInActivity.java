@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -45,10 +46,15 @@ public class SignInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
-        if (hasPermission()) {
-            startSignIn();
+        if (!isNetworkConnected()) {
+            Log.e("SignInTAG", "No network connected.");
+            startErrorDialogNetworkError();
         } else {
-            requestPermission();
+            if (hasPermission()) {
+                startSignIn();
+            } else {
+                requestPermission();
+            }
         }
     }
 
@@ -100,8 +106,11 @@ public class SignInActivity extends AppCompatActivity {
         }
     }
 
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
-
+        return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected();
+    }
 
     /*Sign in*/
 
