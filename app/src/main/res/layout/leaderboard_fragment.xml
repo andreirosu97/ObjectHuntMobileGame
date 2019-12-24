@@ -3,6 +3,13 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/wellcome_screen">
+    android:background="@color/pageBackground">
+    <ListView
+        android:id="@+id/usersRank"
+        style="@style/Widget.ObjHunt.ListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:drawable/dialog_holo_light_frame"
+        />
 
 </LinearLayout>

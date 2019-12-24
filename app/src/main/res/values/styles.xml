@@ -80,6 +80,20 @@
         <item name="android:textSize">40dp</item>
     </style>
 
+    <style name="TextAppearance.ObjHunt.Light.Header" parent="TextAppearance.MaterialComponents.Headline4">
+        <item name="textAllCaps">false</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/backgroundText</item>
+        <item name="android:textSize">30sp</item>3
+    </style>
+
+    <style name="TextAppearance.ObjHunt.Light.Item" parent="TextAppearance.MaterialComponents.Headline4">
+        <item name="textAllCaps">false</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">23sp</item>
+    </style>
+
     <style name="CustomToolBar" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:windowActionBarOverlay">true</item>
         <item name="windowActionBarOverlay">true</item>
