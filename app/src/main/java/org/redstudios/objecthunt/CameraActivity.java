@@ -474,7 +474,6 @@ public abstract class CameraActivity extends AppCompatActivity
         Intent intent = new Intent(this, GameOverActivity.class);
         Bundle gameResult = new Bundle();
         gameResult.putInt("Points", getCurrentPoints());
-        Log.d("RAUL", "Avem : " + foundObjects.size());
         gameResult.putStringArrayList("FoundObjects", foundObjects);
         intent.putExtras(gameResult);
         startActivityForResult(intent, GAME_OVER_REQUEST_CODE);

@@ -3,11 +3,14 @@ package org.redstudios.objecthunt.model;
 import android.util.Log;
 import android.util.Pair;
 
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,6 +24,17 @@ import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class AppState extends Observable {
     private static AppState singletonObject;
+    private HashMap<String, ArrayList<String>> dataSets;
+
+    public static final class GameModes {
+
+        public static final String INDOOR = "indoor";
+        public static final String OUTDOOR = "outdoor";
+        public static final String OFFICE = "office";
+
+        private GameModes() {
+        }
+    }
 
     public static synchronized AppState get() {
         if (singletonObject == null) {
@@ -76,8 +90,28 @@ public class AppState extends Observable {
         return activeUser;
     }
 
+    @SuppressWarnings("unchecked")
     public void setFirebaseFirestore(FirebaseFirestore firebaseFirestore) {
         this.firebaseFirestore = firebaseFirestore;
+        dataSets = new HashMap<>();
+        firebaseFirestore.collection("datasets")
+                .get()
+                .addOnCompleteListener((@NonNull Task<QuerySnapshot> task) -> {
+                    if (task.isSuccessful()) {
+                        if (task.getResult() != null) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.get("Objects"));
+                                dataSets.put(document.getId(), (ArrayList<String>) document.get("Objects"));
+                            }
+                        }
+                    } else {
+                        Log.d(TAG, "Error getting documents: ", task.getException());
+                    }
+                });
+    }
+
+    public ArrayList<String> getObjectForGameMode(String gameMode) {
+        return dataSets.get(gameMode);
     }
 
     public void setActiveUser(FirebaseUser activeUser) {
@@ -109,7 +143,7 @@ public class AppState extends Observable {
     }
 
     public void setTopScore(Integer topScore) {
-        if (topScore.compareTo(this.topScore) == 1) {
+        if (topScore > this.topScore) {
             this.topScore = topScore;
             updateDatabaseField("topScore", topScore);
         }
@@ -136,5 +170,9 @@ public class AppState extends Observable {
             }
         }
         return objList;
+    }
+
+    public FirebaseFirestore getFirebaseFirestore() {
+        return firebaseFirestore;
     }
 }

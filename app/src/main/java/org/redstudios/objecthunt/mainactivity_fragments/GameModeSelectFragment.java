@@ -35,6 +35,7 @@ public class GameModeSelectFragment extends Fragment {
 
         nextButton.setOnClickListener((View view) -> {
             Intent intent = new Intent(getActivity(), ClassifierActivity.class);
+            intent.putExtra("GameMode", AppState.GameModes.INDOOR);
             startActivity(intent);
         });
 

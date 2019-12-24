@@ -9,6 +9,7 @@ import android.os.Trace;
 import android.util.Log;
 
 import org.redstudios.objecthunt.eviroment.Logger;
+import org.redstudios.objecthunt.model.AppState;
 import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.Interpreter;
 import org.tensorflow.lite.gpu.GpuDelegate;
@@ -29,6 +30,7 @@ import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
 import java.io.IOException;
 import java.nio.MappedByteBuffer;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -52,10 +54,7 @@ public class Classifier {
     private static final float IMAGE_STD = 1.0f;
 
     /** The model type used for classification. */
-    public enum GameMode {
-        OFFICE,
-        OUTDOOR
-    }
+    public static String gameMode;
 
     /**
      * Quantized MobileNet requires additional dequantization to the output probability.
@@ -214,8 +213,9 @@ public class Classifier {
         }
     }
 
-    public Classifier(Activity activity, GameMode gameMode) throws IOException {
+    public Classifier(Activity activity, String gameMode) throws IOException {
         //Load model out from the model file.
+        Classifier.gameMode = gameMode;
         tfliteModel = FileUtil.loadMappedFile(activity, MODEL_PATH);
         tfliteOptions.setNumThreads(NUM_THREADS);
         tflite = new Interpreter(tfliteModel, tfliteOptions);
@@ -243,7 +243,6 @@ public class Classifier {
         // Creates the post processor for the output probability.
         probabilityProcessor = new TensorProcessor.Builder().add(getPostprocessNormalizeOp()).build();
 
-        targetObjects = getSampleObjects(10);
         LOGGER.d("Created a Tensorflow Lite Image Classifier.");
     }
 
@@ -348,11 +347,7 @@ public class Classifier {
      */
     private static List<Recognition> getTopKProbability(Map<String, Float> labelProb) {
 
-        ArrayList<String> filter = new ArrayList<>();
-        filter.add("mouse");
-        filter.add("monitor");
-        filter.add("smartphone");
-        filter.add("computer keyboard");
+        ArrayList<String> filter = AppState.get().getObjectForGameMode(gameMode);
         // Find the best classifications.
         PriorityQueue<Recognition> pq =
                 new PriorityQueue<>(
@@ -411,15 +406,17 @@ public class Classifier {
         return new NormalizeOp(PROBABILITY_MEAN, PROBABILITY_STD);
     }
 
-    private void readLabelsAndLabelFilter(Activity activity, GameMode gameMode)
+    private void readLabelsAndLabelFilter(Activity activity, String gameMode)
             throws IOException{
-
-        if (gameMode == GameMode.OFFICE)
-            ;//TODO read from office file
-        else if (gameMode == GameMode.OUTDOOR)
-            ;//TODO read from outdoor file
+        Log.d(TAG, "Starting queue populating");
+        targetObjects = new PriorityQueue<>();
+        Collections.shuffle(AppState.get().getObjectForGameMode(gameMode));
+        for (String obj : AppState.get().getObjectForGameMode(gameMode)) {
+            targetObjects.add(obj);
+        }
         labels = FileUtil.loadLabels(activity, getLabelPath());
 
+        Log.d(TAG, "Ending queue populating");
     }
 
     //Raul
@@ -437,24 +434,5 @@ public class Classifier {
 
     public Boolean checkEmptyQueue() {
         return targetObjects.isEmpty();
-    }
-
-
-    public Queue<String> getSampleObjects(int numberOfObjects) {
-        Queue<String> sample = new PriorityQueue<>();
-        sample.add("mouse");
-        sample.add("monitor");
-        sample.add("computer keyboard");
-        return sample;
-
-//        for(int i=0; i<=numberOfObjects; i++) {
-//            String obj = labels.get(new Random().nextInt(labels.size()));
-//            if(sample.contains(obj)){
-//                i--;
-//                continue;
-//            }
-//            sample.add(obj);
-//        }
-//        return sample;
     }
 }

@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Typeface;
 import android.media.ImageReader.OnImageAvailableListener;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.util.Log;
@@ -13,7 +14,6 @@ import android.util.TypedValue;
 import org.redstudios.objecthunt.eviroment.BorderedText;
 import org.redstudios.objecthunt.eviroment.Logger;
 import org.redstudios.objecthunt.tf.Classifier;
-import org.redstudios.objecthunt.tf.Classifier.GameMode;
 
 import java.io.IOException;
 import java.util.List;
@@ -29,6 +29,13 @@ public class ClassifierActivity extends CameraActivity implements OnImageAvailab
     private int thresholdAccuracy = 60;
     private Handler mHandler = new Handler();
     private Boolean isPostedEndGame = false;
+    private String gameMode;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        gameMode = getIntent().getExtras().getString("GameMode");
+    }
 
     @Override
     protected int getLayoutId() {
@@ -127,9 +134,7 @@ public class ClassifierActivity extends CameraActivity implements OnImageAvailab
             classifier = null;
         }
         try {
-            LOGGER.d(
-                    "Creating classifier (numThreads=2)");
-            classifier = new Classifier(this, GameMode.OFFICE);
+            classifier = new Classifier(this, gameMode);
             updateProgressBar(0);
             updateTextViewTargetObject(classifier.getPeekObject());
         } catch (IOException e) {
