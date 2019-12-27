@@ -19,6 +19,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.games.Games;
+import com.google.android.gms.games.GamesClient;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -45,6 +47,7 @@ public class SignInActivity extends AppCompatActivity {
     private static final String PERMISSION_CAMERA = Manifest.permission.CAMERA;
     private GoogleSignInClient mGoogleSignInClient;
     private GoogleSignInOptions gso;
+    private GamesClient gamesClient;
     private static final int RC_SIGN_IN = 1;
     private static final int PERMISSIONS_REQUEST = 2;
 
@@ -190,7 +193,16 @@ public class SignInActivity extends AppCompatActivity {
                                 Log.d("SignInTAG", "Signed in silently");
                                 if (signedInAccount != null) {
                                     printAcc(signedInAccount);
-                                    firebaseAuthWithPlayGames(signedInAccount);
+                                    gamesClient = Games.getGamesClient(this, signedInAccount);
+                                    gamesClient.setViewForPopups(findViewById(R.id.signInView)).addOnCompleteListener(
+                                            this,
+                                            (@NonNull Task<Void> task2) -> {
+                                                if (task2.isSuccessful()) {
+                                                    // The signed in account is stored in the task's result.
+                                                    Log.d(TAG, "Popup !");
+                                                    firebaseAuthWithPlayGames(signedInAccount);
+                                                }
+                                            });
                                 } else {
                                     toastError("Authentication error.");
                                 }
@@ -209,6 +221,7 @@ public class SignInActivity extends AppCompatActivity {
     private void firebaseAuthWithPlayGames(@NonNull GoogleSignInAccount acct) {
         final FirebaseAuth auth = FirebaseAuth.getInstance();
         String credentials = acct.getServerAuthCode();
+        Log.d(TAG, "Credentials : " + credentials);
         AuthCredential credential = PlayGamesAuthProvider.getCredential(credentials == null ? "" : credentials);
         auth.signInWithCredential(credential)
                 .addOnCompleteListener(this, (@NonNull Task<AuthResult> task) -> {
