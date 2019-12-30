@@ -23,6 +23,7 @@ public class GameOverActivity extends AppCompatActivity {
     private Button playButton;
     private Button backButton;
     private Integer topPoints;
+    private String gameMode;
     private ArrayList<String> foundObjects;
 
     @Override
@@ -51,7 +52,11 @@ public class GameOverActivity extends AppCompatActivity {
         topPoints = gameResult.getInt("Points");
 //        Log.d("RAUL", "Set points ");
         textPoints.setText(topPoints.toString());
-        AppState.get().setTopScore(topPoints);
+
+        gameMode = gameResult.getString("GameMode");
+        AppState.get().submitPlayerScore(gameMode, topPoints);
+        AppState.get().setTopScore(gameMode, topPoints);
+
 //        Log.d("RAUL", "Set objects ");
         textObjetcts.setText(Integer.toString(foundObjects.size()));
 

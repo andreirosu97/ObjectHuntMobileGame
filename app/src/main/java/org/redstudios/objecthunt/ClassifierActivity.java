@@ -29,7 +29,6 @@ public class ClassifierActivity extends CameraActivity implements OnImageAvailab
     private int thresholdAccuracy = 60;
     private Handler mHandler = new Handler();
     private Boolean isPostedEndGame = false;
-    private String gameMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

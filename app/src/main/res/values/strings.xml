@@ -20,6 +20,7 @@
 
 
     <string name="game_mode_button_1_text">Indoor</string>
+    <string name="change_game_mode_text">Change GameMode</string>
     <string name="game_mode_button_2_text">Outdoor</string>
     <string name="game_mode_button_3_text">Office</string>
     <string name="game_mode_button_4_text">Madness</string>
@@ -31,5 +32,6 @@
     <string name="signin_other_error">Error at sign in</string>
     <string name="app_id">1031977838302</string>
     <string name="title_activity_sign_in">SignInActivity</string>
+    <string name="top_score_title">Top Scores</string>
 
 </resources>

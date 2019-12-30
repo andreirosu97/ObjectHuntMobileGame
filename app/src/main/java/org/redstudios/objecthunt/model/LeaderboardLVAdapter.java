@@ -3,7 +3,6 @@ package org.redstudios.objecthunt.model;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,39 +10,22 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.Collections;
-import java.util.Random;
-
 import org.redstudios.objecthunt.R;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
-public class LeaderboardLVAdapter extends ArrayAdapter<Pair<String, Integer>> {
-
-    private class Item {
-        private int color;
-        private String name;
-        private int pts;
-        private int count;
-
-        public Item(int color, String name, int pts, int count) {
-            this.color = color;
-            this.name = name;
-            this.pts = pts;
-            this.count = count;
-        }
-    }
+public class LeaderboardLVAdapter extends ArrayAdapter<LeaderboardItem> {
 
     private Context context;
-    private List<Item> userRank;
+    private List<LeaderboardItem> userRank;
     private int layoutResID;
 
-    public LeaderboardLVAdapter(Context context, int layoutResourceID, List<Pair<String, Integer>> userRank) {
+    public LeaderboardLVAdapter(Context context, int layoutResourceID, List<LeaderboardItem> userRank) {
         super(context, layoutResourceID, userRank);
         this.context = context;
-        userRank = sortUserRank(userRank);
-        this.userRank = transformIntoItems(userRank);
+        this.userRank = userRank;
+        assignColors();
         this.layoutResID = layoutResourceID;
     }
 
@@ -73,19 +55,15 @@ public class LeaderboardLVAdapter extends ArrayAdapter<Pair<String, Integer>> {
             holder = (LeaderboardLVAdapter.RankViewHolder) view.getTag();
         }
 
-        Item item = userRank.get(position);
+        LeaderboardItem item = userRank.get(position);
 
-        holder.userColor.setBackgroundColor(item.color);
-        holder.userName.setText(item.name);
-        holder.points.setText(item.pts + "pts");
-        holder.rank.setText(Integer.toString(item.count));
+        holder.userColor.setBackgroundColor(item.getColor());
+        holder.userName.setText(item.getDisplayName());
+        String displayingScore = item.getDisplayScore() + "pts";
+        holder.points.setText(displayingScore);
+        holder.rank.setText(item.getDisplayRank());
 
         return view;
-    }
-
-    private List<Pair<String, Integer>> sortUserRank(List<Pair<String, Integer>> userRank) {
-        Collections.sort(userRank, (Pair<String, Integer> t0, Pair<String, Integer> t1) -> -Integer.compare(t0.second, t1.second));
-        return userRank;
     }
 
     private int generateColor() {
@@ -93,12 +71,9 @@ public class LeaderboardLVAdapter extends ArrayAdapter<Pair<String, Integer>> {
         return Color.argb(255, rand.nextInt(256), rand.nextInt(256), rand.nextInt(256));
     }
 
-    private List<Item> transformIntoItems(List<Pair<String, Integer>> userRank) {
-        List<Item> items = new ArrayList<>();
-        int i = 0;
-        for (Pair<String, Integer> item : userRank) {
-            items.add(new Item(generateColor(), item.first, item.second, ++i));
+    private void assignColors() {
+        for (LeaderboardItem item : userRank) {
+            item.setColor(generateColor());
         }
-        return items;
     }
 }

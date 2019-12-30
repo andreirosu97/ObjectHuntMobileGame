@@ -66,6 +66,7 @@ public abstract class CameraActivity extends AppCompatActivity
             textViewTargetObject,
             timerTextView,
             pointsTextView;
+    protected String gameMode;
 
     protected ArrayList<String> foundObjects = new ArrayList<>();
     protected Integer totalCurrentPoints = 0;
@@ -474,6 +475,7 @@ public abstract class CameraActivity extends AppCompatActivity
         Intent intent = new Intent(this, GameOverActivity.class);
         Bundle gameResult = new Bundle();
         gameResult.putInt("Points", getCurrentPoints());
+        gameResult.putString("GameMode", gameMode);
         gameResult.putStringArrayList("FoundObjects", foundObjects);
         intent.putExtras(gameResult);
         startActivityForResult(intent, GAME_OVER_REQUEST_CODE);

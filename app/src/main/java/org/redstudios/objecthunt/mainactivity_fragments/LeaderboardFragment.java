@@ -1,60 +1,106 @@
 package org.redstudios.objecthunt.mainactivity_fragments;
 
 import android.os.Bundle;
-import android.util.Pair;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import org.redstudios.objecthunt.R;
+import org.redstudios.objecthunt.model.AppState;
 import org.redstudios.objecthunt.model.LeaderboardLVAdapter;
+import org.redstudios.objecthunt.utils.CallbackableWithBoolean;
+
+import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import java.util.ArrayList;
-import java.util.List;
 
-
-public class LeaderboardFragment extends Fragment {
-
-    ListView listUsers;
+public class LeaderboardFragment extends Fragment implements CallbackableWithBoolean {
+    private ListView listUsers;
+    private Button changeButton;
+    private TextView gameModeTitle;
+    private ProgressBar progressBar;
+    private ArrayList<String> gameModes;
+    private Integer currentGameMode;
+    private ViewGroup header;
+    private RelativeLayout ldbLay;
+    final Handler handler = new Handler();
+    AlphaAnimation fadeInAnimation = new AlphaAnimation(0.0f, 1.0f);//fade from 0 to 1 alpha
+    AlphaAnimation fadeOutAnimation = new AlphaAnimation(1.0f, 0.0f);//fade from 1 to 0 alpha
 
     @Override
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.leaderboard_fragment, container, false);
         listUsers = view.findViewById(R.id.usersRank);
+        progressBar = view.findViewById(R.id.progressBar_cyclic);
+        changeButton = view.findViewById(R.id.change_game_mode);
+        gameModeTitle = view.findViewById(R.id.game_mode_title);
+        header = view.findViewById(R.id.leader_header);
+        ldbLay = view.findViewById(R.id.ldb_rel_lay);
+        gameModes = AppState.get().getGameModes();
+        currentGameMode = 0;
 
-        List<Pair<String, Integer>> users = new ArrayList<>();
-        users.add(Pair.create("Raul", 185));
-        users.add(Pair.create("Caca", 300));
-        users.add(Pair.create("Andrei", 175));
-        users.add(Pair.create("Dusmanu face legea", 30));
-        users.add(Pair.create("Flavius", 195));
-        users.add(Pair.create("Darius", 165));
-        users.add(Pair.create("Mine", 60));
-        users.add(Pair.create("Paul", 200));
-        users.add(Pair.create("M-a", 155));
-        users.add(Pair.create("Facut", 145));
-        users.add(Pair.create("Vine", 50));
-        users.add(Pair.create("Mama", 135));
-        users.add(Pair.create("Maca", 295));
-        users.add(Pair.create("Banu", 40));
-        users.add(Pair.create("Frumoasa", 125));
-        users.add(Pair.create("Maii", 115));
-        users.add(Pair.create("Eu sunt", 105));
-        users.add(Pair.create("Capitanu", 90));
-        users.add(Pair.create("Tot", 80));
-        users.add(Pair.create("La", 70));
+        fadeInAnimation.setDuration(600);
+        fadeInAnimation.setFillAfter(true);
+        fadeOutAnimation.setDuration(600);
+        fadeOutAnimation.setFillAfter(true);
 
-        LeaderboardLVAdapter objectsFoundAdapter = new LeaderboardLVAdapter(this.getActivity(), R.layout.leaderboard_row, users);
-        listUsers.setAdapter(objectsFoundAdapter);
-        ViewGroup header = (ViewGroup) inflater.inflate(R.layout.leader_board_header, listUsers, false);
+        changeButton.setOnClickListener((View v) -> {
+            ldbLay.startAnimation(fadeOutAnimation);
+            handler.postDelayed(() -> {
+                loadLeaderBoard(getNextGameMode());
+            }, 600);
+        });
+
+        header = (ViewGroup) inflater.inflate(R.layout.leader_board_header, listUsers, false);
         listUsers.addHeaderView(header);
+        loadLeaderBoard(AppState.GameModes.INDOOR);
         return view;
     }
 
+    private void loadLeaderBoard(String gameMode) {
+        ldbLay.setVisibility(View.GONE);
+        changeButton.setVisibility(View.GONE);
+        listUsers.setVisibility(View.GONE);
+        gameModeTitle.setVisibility(View.GONE);
+        progressBar.setVisibility(View.VISIBLE);
+        gameModeTitle.setText(gameMode);
+        progressBar.startAnimation(fadeInAnimation);
+        handler.postDelayed(() -> {
+            AppState.get().loadLeaderBoard(gameMode, this);
+        }, 600);
+    }
+
+    @Override
+    public void callback(Boolean completionStatus) {
+        LeaderboardLVAdapter objectsFoundAdapter = new LeaderboardLVAdapter(this.getActivity(), R.layout.leaderboard_row, AppState.get().getScores());
+        listUsers.setAdapter(objectsFoundAdapter);
+        progressBar.startAnimation(fadeOutAnimation);
+        handler.postDelayed(() -> {
+            progressBar.setVisibility(View.GONE);
+            ldbLay.startAnimation(fadeInAnimation);
+            ldbLay.setVisibility(View.VISIBLE);
+            changeButton.setVisibility(View.VISIBLE);
+            listUsers.setVisibility(View.VISIBLE);
+            gameModeTitle.setVisibility(View.VISIBLE);
+        }, 600);
+    }
+
+    private String getNextGameMode() {
+        if (currentGameMode == gameModes.size() - 1) {
+            currentGameMode = 0;
+        } else {
+            currentGameMode++;
+        }
+        return gameModes.get(currentGameMode);
+    }
 }

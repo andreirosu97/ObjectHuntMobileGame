@@ -58,19 +58,15 @@
             android:layout_gravity="center_horizontal"
             android:background="@android:drawable/dialog_holo_light_frame"
             android:gravity="center"
-            android:text="Top score "
+            android:text="@string/top_score_title"
             android:textAppearance="@style/TextAppearance.ObjHunt.Profile.Simple.Dark.Text" />
 
-        <TextView
-            android:id="@+id/topScoreText"
+        <ListView
+            android:id="@+id/topScores"
+            style="@style/Widget.ObjHunt.ListView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:background="@android:drawable/dialog_holo_light_frame"
-            android:backgroundTint="@color/colorPrimaryDark"
-            android:gravity="center"
-            android:text="100 pts"
-            android:textAppearance="@style/TextAppearance.ObjHunt.Profile.Simple.Light.Text" />
+            android:background="@android:drawable/dialog_holo_light_frame" />
 
         <LinearLayout
             android:layout_width="wrap_content"

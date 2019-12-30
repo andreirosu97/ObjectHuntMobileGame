@@ -36,6 +36,7 @@ import static androidx.constraintlayout.widget.Constraints.TAG;
 public class ProfileFragment extends Fragment implements Observer {
 
     private ListView listScores;
+    private ListView listTopScores;
     private ImageButton editButton;
     private TextView name;
     private TextView topScore;
@@ -50,9 +51,10 @@ public class ProfileFragment extends Fragment implements Observer {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.profile_fragment, container, false);
         listScores = view.findViewById(R.id.TopObjList);
+        listTopScores = view.findViewById(R.id.topScores);
         editButton = view.findViewById(R.id.EditNameButton);
         name = view.findViewById(R.id.TextViewName);
-        topScore = view.findViewById(R.id.topScoreText);
+        //topScore = view.findViewById(R.id.topScoreText);
         editName = view.findViewById(R.id.hiddenEditName);
         switcher = view.findViewById(R.id.nameSwitcher);
         touchInterceptor = view.findViewById(R.id.touchInterceptor);
@@ -132,7 +134,12 @@ public class ProfileFragment extends Fragment implements Observer {
         if (getActivity() != null) {
             name.setText(AppState.get().getNickName());
             editName.setText(AppState.get().getNickName());
-            topScore.setText(String.format("%s", AppState.get().getTopScore().toString()));
+
+            List<Pair<String, String>> topScores = AppState.get().getPlayerScores();
+            ObjectsAdapter topScoresAdapter = new ObjectsAdapter(this.getActivity(), R.layout.two_column_item_list, topScores);
+            listTopScores.setAdapter(topScoresAdapter);
+
+//            topScore.setText(String.format("%s", AppState.get().getTopScore().toString()));
             List<Pair<String, String>> objectsFound = AppState.get().getListOfObjectsFound();
             ObjectsAdapter objectsFoundAdapter = new ObjectsAdapter(this.getActivity(), R.layout.two_column_item_list, objectsFound);
             listScores.setAdapter(objectsFoundAdapter);

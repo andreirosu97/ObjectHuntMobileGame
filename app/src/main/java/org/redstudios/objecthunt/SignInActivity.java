@@ -97,7 +97,7 @@ public class SignInActivity extends AppCompatActivity {
                     Log.d(TAG, "No such user, creating it.");
                     HashMap<String, Object> dataStructure = new HashMap<>();
                     dataStructure.put("nickName", user.getDisplayName());
-                    dataStructure.put("topScore", 0);
+                    dataStructure.put("topScore", new HashMap<>());
                     dataStructure.put("objectsFound", new HashMap<>());
                     firebaseFirestore.collection("users").document(user.getUid()).set(dataStructure);
                 }
@@ -172,7 +172,18 @@ public class SignInActivity extends AppCompatActivity {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             if (account != null) {
                 printAcc(account);
-                firebaseAuthWithPlayGames(account);
+                gamesClient = Games.getGamesClient(this, account);
+                AppState.get().setLeaderboardsClient(Games.getLeaderboardsClient(this, account));
+                //AppState.get().updatePlayerScores();
+                gamesClient.setViewForPopups(findViewById(R.id.signInView)).addOnCompleteListener(
+                        this,
+                        (@NonNull Task<Void> task2) -> {
+                            if (task2.isSuccessful()) {
+                                // The signed in account is stored in the task's result.
+                                Log.d(TAG, "Popup 2!");
+                                firebaseAuthWithPlayGames(account);
+                            }
+                        });
             }
         } catch (ApiException e) {
             Log.e("SignInTAG", "signInResult:failed code=" + e.getStatusCode());
@@ -194,6 +205,7 @@ public class SignInActivity extends AppCompatActivity {
                                 if (signedInAccount != null) {
                                     printAcc(signedInAccount);
                                     gamesClient = Games.getGamesClient(this, signedInAccount);
+                                    AppState.get().setLeaderboardsClient(Games.getLeaderboardsClient(this, signedInAccount));
                                     gamesClient.setViewForPopups(findViewById(R.id.signInView)).addOnCompleteListener(
                                             this,
                                             (@NonNull Task<Void> task2) -> {

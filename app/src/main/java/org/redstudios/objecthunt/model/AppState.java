@@ -3,6 +3,11 @@ package org.redstudios.objecthunt.model;
 import android.util.Log;
 import android.util.Pair;
 
+import com.google.android.gms.games.AnnotatedData;
+import com.google.android.gms.games.LeaderboardsClient;
+import com.google.android.gms.games.leaderboard.LeaderboardScore;
+import com.google.android.gms.games.leaderboard.LeaderboardScoreBuffer;
+import com.google.android.gms.games.leaderboard.ScoreSubmissionData;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -12,7 +17,10 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import org.redstudios.objecthunt.utils.CallbackableWithBoolean;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Observable;
@@ -21,6 +29,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import static androidx.constraintlayout.widget.Constraints.TAG;
+import static com.google.android.gms.games.leaderboard.LeaderboardVariant.COLLECTION_PUBLIC;
+import static com.google.android.gms.games.leaderboard.LeaderboardVariant.TIME_SPAN_ALL_TIME;
 
 public class AppState extends Observable {
     private static AppState singletonObject;
@@ -36,6 +46,11 @@ public class AppState extends Observable {
         }
     }
 
+    ArrayList<String> leaderboardsIds = new ArrayList<>(
+            Arrays.asList("CgkI3s2wtYQeEAIQAQ", "CgkI3s2wtYQeEAIQAw", "CgkI3s2wtYQeEAIQBA"));
+
+    HashMap<String, String> playerScores = new HashMap<>();
+
     public static synchronized AppState get() {
         if (singletonObject == null) {
             singletonObject = new AppState();
@@ -46,12 +61,14 @@ public class AppState extends Observable {
     private DocumentReference userDocument;
     private FirebaseFirestore firebaseFirestore;
     private FirebaseUser activeUser;
+    private LeaderboardsClient leaderboardsClient;
 
     //TODO convert this data into userAdapter for the database
     private String userId;
     private String nickName;
-    private Integer topScore;
+    private HashMap<String, Object> topScore;
     private HashMap<String, Object> objectsFound;
+    private List<LeaderboardItem> scores = new ArrayList<>();
 
     @SuppressWarnings("unchecked")
     public void setUserDocument(DocumentReference userDocument) {
@@ -67,9 +84,9 @@ public class AppState extends Observable {
                 Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                 userId = document.getId();
                 nickName = document.getString("nickName");
-                Double doubleTopScore = document.getDouble("topScore");
-                if (doubleTopScore != null) {
-                    topScore = doubleTopScore.intValue();
+                topScore = (HashMap<String, Object>) document.get("topScore");
+                for (String key : topScore.keySet()) {
+                    Log.i("User Info", key + " has the score of " + topScore.get(key));
                 }
                 objectsFound = (HashMap<String, Object>) document.get("objectsFound");
                 Log.i("User Info", "User ID : " + userId);
@@ -110,6 +127,10 @@ public class AppState extends Observable {
                 });
     }
 
+    public ArrayList<String> getGameModes() {
+        return new ArrayList<>(Arrays.asList(GameModes.INDOOR, GameModes.OFFICE, GameModes.OUTDOOR));
+    }
+
     public ArrayList<String> getObjectForGameMode(String gameMode) {
         return dataSets.get(gameMode);
     }
@@ -138,15 +159,16 @@ public class AppState extends Observable {
         updateDatabaseField("nickName", nickName);
     }
 
-    public Integer getTopScore() {
-        return topScore;
-    }
-
-    public void setTopScore(Integer topScore) {
-        if (topScore > this.topScore) {
-            this.topScore = topScore;
-            updateDatabaseField("topScore", topScore);
+    public void setTopScore(String gameMode, Integer newScore) {
+        Long score = (Long) this.topScore.get(gameMode);
+        if (score != null) {
+            if (newScore > score) {
+                this.topScore.put(gameMode, newScore);
+            }
+        } else {
+            this.topScore.put(gameMode, newScore);
         }
+        updateDatabaseField("topScore", this.topScore);
     }
 
     public void addToObjetsFound(List<String> objectsFound) {
@@ -170,6 +192,95 @@ public class AppState extends Observable {
             }
         }
         return objList;
+    }
+
+    public void loadLeaderBoard(String gameMode, CallbackableWithBoolean leaderboardDisplayerActivity) {
+        String ldbId = "";
+        scores = new ArrayList<>();
+
+        switch (gameMode) {
+            case GameModes.INDOOR:
+                ldbId = leaderboardsIds.get(0);
+                break;
+            case GameModes.OUTDOOR:
+                ldbId = leaderboardsIds.get(1);
+                break;
+            case GameModes.OFFICE:
+                ldbId = leaderboardsIds.get(2);
+                break;
+        }
+
+        leaderboardsClient.loadPlayerCenteredScores(ldbId, TIME_SPAN_ALL_TIME, COLLECTION_PUBLIC, 20).addOnCompleteListener(
+                (@NonNull Task<AnnotatedData<LeaderboardsClient.LeaderboardScores>> task) -> {
+                    if (task.isSuccessful()) {
+
+                        AnnotatedData<LeaderboardsClient.LeaderboardScores> annotatedData = task.getResult();
+                        if (annotatedData != null) {
+                            LeaderboardsClient.LeaderboardScores leaderboardScores = annotatedData.get();
+                            if (leaderboardScores != null) {
+                                LeaderboardScoreBuffer buffer = leaderboardScores.getScores();
+                                for (LeaderboardScore score : buffer) {
+                                    String name = score.getScoreHolderDisplayName();
+                                    name = name.substring(0, name.length() - 4);
+                                    scores.add(new LeaderboardItem(name, score.getDisplayScore(), score.getDisplayRank()));
+                                }
+                                buffer.release();
+                                Log.d(TAG, "Success am luat boardul");
+                                leaderboardDisplayerActivity.callback(true);
+                            } else {
+                                Log.e(TAG, "Fail la board");
+                            }
+                        } else {
+                            Log.e(TAG, "Fail la board");
+                        }
+                    } else {
+                        Log.e(TAG, "Fail la board");
+                    }
+                });
+    }
+
+    public List<LeaderboardItem> getScores() {
+        return scores;
+    }
+
+    public void submitPlayerScore(String gameMode, Integer score) {
+        String ldbId = "";
+        switch (gameMode) {
+            case GameModes.INDOOR:
+                ldbId = leaderboardsIds.get(0);
+                break;
+            case GameModes.OUTDOOR:
+                ldbId = leaderboardsIds.get(1);
+                break;
+            case GameModes.OFFICE:
+                ldbId = leaderboardsIds.get(2);
+                break;
+        }
+        leaderboardsClient.submitScoreImmediate(ldbId, score).addOnCompleteListener(
+                (@NonNull Task<ScoreSubmissionData> task) -> {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "Success " + task.getResult().getLeaderboardId() + " " + task.getResult().getPlayerId());
+                        this.setChanged();
+                        notifyObservers();
+                    } else {
+                        Log.e(TAG, "Fail");
+                    }
+                });
+    }
+
+    public List<Pair<String, String>> getPlayerScores() {
+        List<Pair<String, String>> scores = new ArrayList<>();
+        for (String key : topScore.keySet()) {
+            Object value = topScore.get(key);
+            if (value != null) {
+                scores.add(Pair.create(key, value.toString()));
+            }
+        }
+        return scores;
+    }
+
+    public void setLeaderboardsClient(LeaderboardsClient leaderboardsClient) {
+        this.leaderboardsClient = leaderboardsClient;
     }
 
     public FirebaseFirestore getFirebaseFirestore() {
