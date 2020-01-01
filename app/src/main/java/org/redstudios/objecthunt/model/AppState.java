@@ -36,6 +36,7 @@ public class AppState extends Observable {
     private static AppState singletonObject;
     private HashMap<String, ArrayList<String>> dataSets;
 
+
     public static final class GameModes {
 
         public static final String INDOOR = "indoor";
@@ -46,10 +47,15 @@ public class AppState extends Observable {
         }
     }
 
+    private AppState() {
+        needsUpdate.put(GameModes.INDOOR, true);
+        needsUpdate.put(GameModes.OUTDOOR, true);
+        needsUpdate.put(GameModes.OFFICE, true);
+    }
+
+
     ArrayList<String> leaderboardsIds = new ArrayList<>(
             Arrays.asList("CgkI3s2wtYQeEAIQAQ", "CgkI3s2wtYQeEAIQAw", "CgkI3s2wtYQeEAIQBA"));
-
-    HashMap<String, String> playerScores = new HashMap<>();
 
     public static synchronized AppState get() {
         if (singletonObject == null) {
@@ -69,7 +75,7 @@ public class AppState extends Observable {
     private HashMap<String, Object> topScore;
     private HashMap<String, Object> objectsFound;
     private List<LeaderboardItem> scores = new ArrayList<>();
-    private Boolean needsUpdate = false;
+    private HashMap<String, Boolean> needsUpdate = new HashMap<>();
 
     @SuppressWarnings("unchecked")
     public void setUserDocument(DocumentReference userDocument) {
@@ -88,6 +94,9 @@ public class AppState extends Observable {
                 topScore = (HashMap<String, Object>) document.get("topScore");
                 for (String key : topScore.keySet()) {
                     Log.i("User Info", key + " has the score of " + topScore.get(key));
+                    Long l = (Long) topScore.get(key);
+
+                    submitPlayerScore(key, (int) (long) l);
                 }
                 objectsFound = (HashMap<String, Object>) document.get("objectsFound");
                 Log.i("User Info", "User ID : " + userId);
@@ -211,7 +220,7 @@ public class AppState extends Observable {
                 break;
         }
 
-        leaderboardsClient.loadPlayerCenteredScores(ldbId, TIME_SPAN_ALL_TIME, COLLECTION_PUBLIC, 20, needsUpdate).addOnCompleteListener(
+        leaderboardsClient.loadPlayerCenteredScores(ldbId, TIME_SPAN_ALL_TIME, COLLECTION_PUBLIC, 20, needsUpdate.get(gameMode)).addOnCompleteListener(
                 (@NonNull Task<AnnotatedData<LeaderboardsClient.LeaderboardScores>> task) -> {
                     if (task.isSuccessful()) {
 
@@ -227,6 +236,7 @@ public class AppState extends Observable {
                                 }
                                 buffer.release();
                                 Log.d(TAG, "Success am luat boardul");
+                                needsUpdate.put(gameMode, false);
                                 leaderboardDisplayerActivity.callback(true);
                             } else {
                                 Log.e(TAG, "Fail la board");
@@ -238,7 +248,6 @@ public class AppState extends Observable {
                         Log.e(TAG, "Fail la board");
                     }
                 });
-        needsUpdate = false;
     }
 
     public List<LeaderboardItem> getScores() {
@@ -289,7 +298,7 @@ public class AppState extends Observable {
         return firebaseFirestore;
     }
 
-    public void setNeedsUpdate() {
-        needsUpdate = true;
+    public void setNeedsUpdate(String gameMode) {
+        needsUpdate.put(gameMode, true);
     }
 }

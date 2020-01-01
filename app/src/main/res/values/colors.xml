@@ -18,6 +18,7 @@
     <color name="timerUnderTenSecColor">#FF1B2F</color>
     <color name="darkGray">#3D3D3D</color>
     <color name="golden">#FFB64C</color>
+    <color name="alb">@android:color/white</color>
 
     <color name="semi_transparent">#66000000</color>
 </resources>

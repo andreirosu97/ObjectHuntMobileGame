@@ -24,7 +24,7 @@ import androidx.fragment.app.Fragment;
 
 
 public class LeaderboardFragment extends Fragment implements CallbackableWithBoolean {
-    private final Integer ANIM_DURATION = 350;
+    private final Integer ANIM_DURATION = 100;
     private ListView listUsers;
     private Button changeButton;
     private TextView gameModeTitle;
@@ -69,31 +69,35 @@ public class LeaderboardFragment extends Fragment implements CallbackableWithBoo
     }
 
     private void loadLeaderBoard(String gameMode) {
-        ldbLay.setVisibility(View.GONE);
-        changeButton.setVisibility(View.GONE);
-        listUsers.setVisibility(View.GONE);
-        gameModeTitle.setVisibility(View.GONE);
-        progressBar.setVisibility(View.VISIBLE);
-        gameModeTitle.setText(gameMode);
-        progressBar.startAnimation(fadeInAnimation);
-        handler.postDelayed(() -> {
-            AppState.get().loadLeaderBoard(gameMode, this);
-        }, ANIM_DURATION);
+        if (getActivity() != null) {
+            ldbLay.setVisibility(View.GONE);
+            changeButton.setVisibility(View.GONE);
+            listUsers.setVisibility(View.GONE);
+            gameModeTitle.setVisibility(View.GONE);
+            progressBar.setVisibility(View.VISIBLE);
+            gameModeTitle.setText(gameMode);
+            progressBar.startAnimation(fadeInAnimation);
+            handler.postDelayed(() -> {
+                AppState.get().loadLeaderBoard(gameMode, this);
+            }, ANIM_DURATION);
+        }
     }
 
     @Override
     public void callback(Boolean completionStatus) {
-        LeaderboardLVAdapter objectsFoundAdapter = new LeaderboardLVAdapter(this.getActivity(), R.layout.leaderboard_row, AppState.get().getScores());
-        listUsers.setAdapter(objectsFoundAdapter);
-        progressBar.startAnimation(fadeOutAnimation);
-        handler.postDelayed(() -> {
-            progressBar.setVisibility(View.GONE);
-            ldbLay.startAnimation(fadeInAnimation);
-            ldbLay.setVisibility(View.VISIBLE);
-            changeButton.setVisibility(View.VISIBLE);
-            listUsers.setVisibility(View.VISIBLE);
-            gameModeTitle.setVisibility(View.VISIBLE);
-        }, ANIM_DURATION);
+        if (getActivity() != null) {
+            LeaderboardLVAdapter objectsFoundAdapter = new LeaderboardLVAdapter(this.getActivity(), R.layout.leaderboard_row, AppState.get().getScores());
+            listUsers.setAdapter(objectsFoundAdapter);
+            progressBar.startAnimation(fadeOutAnimation);
+            handler.postDelayed(() -> {
+                progressBar.setVisibility(View.GONE);
+                ldbLay.startAnimation(fadeInAnimation);
+                ldbLay.setVisibility(View.VISIBLE);
+                changeButton.setVisibility(View.VISIBLE);
+                listUsers.setVisibility(View.VISIBLE);
+                gameModeTitle.setVisibility(View.VISIBLE);
+            }, ANIM_DURATION);
+        }
     }
 
     private String getNextGameMode() {

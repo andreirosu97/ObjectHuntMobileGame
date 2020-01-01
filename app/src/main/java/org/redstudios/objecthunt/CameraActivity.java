@@ -88,8 +88,11 @@ public abstract class CameraActivity extends AppCompatActivity
                     openGameOverScreen();
                     return;
                 }
-                if (seconds <= 9 && timerTextView.getCurrentTextColor() != getResources().getColor(R.color.timerUnderTenSecColor))
+                if (seconds <= 9) {
                     timerTextView.setTextColor(getResources().getColor(R.color.timerUnderTenSecColor));
+                } else {
+                    timerTextView.setTextColor(getResources().getColor(R.color.alb));
+                }
             }
 
             timerTextView.setText(String.format("%d:%02d", minutes, seconds) + "s");
