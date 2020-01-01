@@ -69,6 +69,7 @@ public class AppState extends Observable {
     private HashMap<String, Object> topScore;
     private HashMap<String, Object> objectsFound;
     private List<LeaderboardItem> scores = new ArrayList<>();
+    private Boolean needsUpdate = false;
 
     @SuppressWarnings("unchecked")
     public void setUserDocument(DocumentReference userDocument) {
@@ -210,7 +211,7 @@ public class AppState extends Observable {
                 break;
         }
 
-        leaderboardsClient.loadPlayerCenteredScores(ldbId, TIME_SPAN_ALL_TIME, COLLECTION_PUBLIC, 20).addOnCompleteListener(
+        leaderboardsClient.loadPlayerCenteredScores(ldbId, TIME_SPAN_ALL_TIME, COLLECTION_PUBLIC, 20, needsUpdate).addOnCompleteListener(
                 (@NonNull Task<AnnotatedData<LeaderboardsClient.LeaderboardScores>> task) -> {
                     if (task.isSuccessful()) {
 
@@ -237,6 +238,7 @@ public class AppState extends Observable {
                         Log.e(TAG, "Fail la board");
                     }
                 });
+        needsUpdate = false;
     }
 
     public List<LeaderboardItem> getScores() {
@@ -285,5 +287,9 @@ public class AppState extends Observable {
 
     public FirebaseFirestore getFirebaseFirestore() {
         return firebaseFirestore;
+    }
+
+    public void setNeedsUpdate() {
+        needsUpdate = true;
     }
 }

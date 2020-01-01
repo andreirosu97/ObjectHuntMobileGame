@@ -32,10 +32,12 @@ import java.nio.MappedByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.Random;
 
 import static android.content.ContentValues.TAG;
 
@@ -214,6 +216,7 @@ public class Classifier {
     }
 
     public Classifier(Activity activity, String gameMode) throws IOException {
+        LOGGER.d("Creating classifier");
         //Load model out from the model file.
         Classifier.gameMode = gameMode;
         tfliteModel = FileUtil.loadMappedFile(activity, MODEL_PATH);
@@ -409,11 +412,10 @@ public class Classifier {
     private void readLabelsAndLabelFilter(Activity activity, String gameMode)
             throws IOException{
         Log.d(TAG, "Starting queue populating");
-        targetObjects = new PriorityQueue<>();
-        Collections.shuffle(AppState.get().getObjectForGameMode(gameMode));
-        for (String obj : AppState.get().getObjectForGameMode(gameMode)) {
-            targetObjects.add(obj);
-        }
+        ArrayList<String> objList = AppState.get().getObjectForGameMode(gameMode);
+        targetObjects = new LinkedList<>();
+        Collections.shuffle(objList, new Random(System.currentTimeMillis() % 5000));
+        targetObjects.addAll(objList);
         labels = FileUtil.loadLabels(activity, getLabelPath());
 
         Log.d(TAG, "Ending queue populating");

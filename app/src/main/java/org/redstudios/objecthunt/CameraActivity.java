@@ -67,15 +67,18 @@ public abstract class CameraActivity extends AppCompatActivity
             timerTextView,
             pointsTextView;
     protected String gameMode;
+    protected Boolean isObjectFound = false;
 
     protected ArrayList<String> foundObjects = new ArrayList<>();
     protected Integer totalCurrentPoints = 0;
-    int timeLimit = 20;
+    private Integer timeLimit = 20;
     Handler timerHandler = new Handler();
     Runnable timerRunnable = new Runnable() {
         @Override
         public void run() {
-            timeLimit = timeLimit - 1;
+            if (!isObjectFound) {
+                timeLimit = timeLimit - 1;
+            }
             int seconds = timeLimit;
             int minutes = seconds / 60;
             seconds = seconds % 60;
@@ -93,6 +96,10 @@ public abstract class CameraActivity extends AppCompatActivity
             timerHandler.postDelayed(this, 1000);
         }
     };
+
+    public void addTime(Integer time) {
+        timeLimit = timeLimit + time;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

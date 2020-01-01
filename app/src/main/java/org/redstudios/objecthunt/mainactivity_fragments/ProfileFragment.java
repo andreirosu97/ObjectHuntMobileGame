@@ -63,6 +63,7 @@ public class ProfileFragment extends Fragment implements Observer {
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
+        Log.d(TAG, "onActivityCreated Profile Fragment");
         super.onActivityCreated(savedInstanceState);
         initializeListeners();
         updateProfileData();

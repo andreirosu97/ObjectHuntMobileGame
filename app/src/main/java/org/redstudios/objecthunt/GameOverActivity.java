@@ -56,6 +56,7 @@ public class GameOverActivity extends AppCompatActivity {
         gameMode = gameResult.getString("GameMode");
         AppState.get().submitPlayerScore(gameMode, topPoints);
         AppState.get().setTopScore(gameMode, topPoints);
+        AppState.get().setNeedsUpdate();
 
 //        Log.d("RAUL", "Set objects ");
         textObjetcts.setText(Integer.toString(foundObjects.size()));

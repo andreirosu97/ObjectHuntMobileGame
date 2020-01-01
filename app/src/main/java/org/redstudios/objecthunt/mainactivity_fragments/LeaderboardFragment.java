@@ -24,6 +24,7 @@ import androidx.fragment.app.Fragment;
 
 
 public class LeaderboardFragment extends Fragment implements CallbackableWithBoolean {
+    private final Integer ANIM_DURATION = 350;
     private ListView listUsers;
     private Button changeButton;
     private TextView gameModeTitle;
@@ -49,9 +50,9 @@ public class LeaderboardFragment extends Fragment implements CallbackableWithBoo
         gameModes = AppState.get().getGameModes();
         currentGameMode = 0;
 
-        fadeInAnimation.setDuration(600);
+        fadeInAnimation.setDuration(ANIM_DURATION);
         fadeInAnimation.setFillAfter(true);
-        fadeOutAnimation.setDuration(600);
+        fadeOutAnimation.setDuration(ANIM_DURATION);
         fadeOutAnimation.setFillAfter(true);
 
         changeButton.setOnClickListener((View v) -> {
@@ -77,7 +78,7 @@ public class LeaderboardFragment extends Fragment implements CallbackableWithBoo
         progressBar.startAnimation(fadeInAnimation);
         handler.postDelayed(() -> {
             AppState.get().loadLeaderBoard(gameMode, this);
-        }, 600);
+        }, ANIM_DURATION);
     }
 
     @Override
@@ -92,7 +93,7 @@ public class LeaderboardFragment extends Fragment implements CallbackableWithBoo
             changeButton.setVisibility(View.VISIBLE);
             listUsers.setVisibility(View.VISIBLE);
             gameModeTitle.setVisibility(View.VISIBLE);
-        }, 600);
+        }, ANIM_DURATION);
     }
 
     private String getNextGameMode() {

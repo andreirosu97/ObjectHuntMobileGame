@@ -12,8 +12,6 @@ import org.redstudios.objecthunt.ClassifierActivity;
 import org.redstudios.objecthunt.R;
 import org.redstudios.objecthunt.model.AppState;
 
-import java.util.ArrayList;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
@@ -30,20 +28,26 @@ public class GameModeSelectFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.game_mode_select_fragment, container, false);
 
-        MaterialButton nextButton = view.findViewById(R.id.game_mode_button_1);
-        MaterialButton nextButton2 = view.findViewById(R.id.game_mode_button_2);
+        MaterialButton outdoorBtn = view.findViewById(R.id.game_mode_button_1);
+        MaterialButton indoorBtn = view.findViewById(R.id.game_mode_button_2);
+        MaterialButton officeBtn = view.findViewById(R.id.game_mode_button_3);
 
-        nextButton.setOnClickListener((View view) -> {
+        outdoorBtn.setOnClickListener((View view) -> {
             Intent intent = new Intent(getActivity(), ClassifierActivity.class);
             intent.putExtra("GameMode", AppState.GameModes.INDOOR);
             startActivity(intent);
         });
 
-        nextButton2.setOnClickListener((View view) -> {
-            ArrayList<String> s = new ArrayList<>();
-            s.add("Mouse");
-            s.add("Tastatura");
-            AppState.get().addToObjetsFound(s);
+        indoorBtn.setOnClickListener((View view) -> {
+            Intent intent = new Intent(getActivity(), ClassifierActivity.class);
+            intent.putExtra("GameMode", AppState.GameModes.OUTDOOR);
+            startActivity(intent);
+        });
+
+        officeBtn.setOnClickListener((View view) -> {
+            Intent intent = new Intent(getActivity(), ClassifierActivity.class);
+            intent.putExtra("GameMode", AppState.GameModes.OFFICE);
+            startActivity(intent);
         });
 
         return view;

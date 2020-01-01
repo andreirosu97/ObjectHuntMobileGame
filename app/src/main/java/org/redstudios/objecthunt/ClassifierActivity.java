@@ -1,5 +1,6 @@
 package org.redstudios.objecthunt;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Typeface;
@@ -7,18 +8,20 @@ import android.media.ImageReader.OnImageAvailableListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
-import android.util.Log;
 import android.util.Size;
 import android.util.TypedValue;
 
 import org.redstudios.objecthunt.eviroment.BorderedText;
 import org.redstudios.objecthunt.eviroment.Logger;
+import org.redstudios.objecthunt.model.ImageFoundDialog;
 import org.redstudios.objecthunt.tf.Classifier;
 
 import java.io.IOException;
 import java.util.List;
 
 public class ClassifierActivity extends CameraActivity implements OnImageAvailableListener {
+
+    private static final int NEXT_IMAGE_REQUEST_CODE = 421;
     private static final Logger LOGGER = new Logger();
     private static final Size DESIRED_PREVIEW_SIZE = new Size(640, 480);
     private static final float TEXT_SIZE_DIP = 10;
@@ -26,7 +29,7 @@ public class ClassifierActivity extends CameraActivity implements OnImageAvailab
     private Integer sensorOrientation;
     private Classifier classifier;
     private BorderedText borderedText;
-    private int thresholdAccuracy = 60;
+    private int thresholdAccuracy = 10;
     private Handler mHandler = new Handler();
     private Boolean isPostedEndGame = false;
 
@@ -55,7 +58,7 @@ public class ClassifierActivity extends CameraActivity implements OnImageAvailab
         borderedText = new BorderedText(textSizePx);
         borderedText.setTypeface(Typeface.MONOSPACE);
 
-        recreateClassifier();
+        createClassifier();
         if (classifier == null) {
             LOGGER.e("No classifier on preview!");
             return;
@@ -84,6 +87,8 @@ public class ClassifierActivity extends CameraActivity implements OnImageAvailab
             if (!classifier.checkEmptyQueue()) {
                 totalCurrentPoints = getCurrentPoints() + 100 + foundObjects.size() * 25;
                 addFoundObject(classifier.popPeekObject());
+                isObjectFound = true;
+                addTime(21 - foundObjects.size());
                 //TODO Make dialog where gj and show next object
                 //TODO Play sound or sth +- vibrate flash the screen in one color
             } else if (!isPostedEndGame) { //ESTI UN ZEU
@@ -108,11 +113,26 @@ public class ClassifierActivity extends CameraActivity implements OnImageAvailab
                                         updateTotalPoints();
                                         updateTextViewTargetObject(classifier.getPeekObject());
                                     }
-
                                 });
                     }
-                    readyForNextImage();
+                    if (isObjectFound) {
+                        Intent dialogIntent = new Intent(this, ImageFoundDialog.class);
+                        dialogIntent.putExtra("ObjectName", foundObjects.get(foundObjects.size() - 1));
+                        startActivityForResult(dialogIntent, NEXT_IMAGE_REQUEST_CODE);
+                    } else {
+                        readyForNextImage();
+                    }
                 });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == NEXT_IMAGE_REQUEST_CODE) {
+            LOGGER.d("Ready for next image");
+            isObjectFound = false;
+            readyForNextImage();
+        }
     }
 
     private Runnable endGame = () -> openGameOverScreen();
@@ -123,14 +143,12 @@ public class ClassifierActivity extends CameraActivity implements OnImageAvailab
             // Defer creation until we're getting camera frames.
             return;
         }
-        runInBackground(() -> recreateClassifier());
+        runInBackground(() -> createClassifier());
     }
 
-    private void recreateClassifier() {
+    private void createClassifier() {
         if (classifier != null) {
-            LOGGER.d("Closing classifier.");
-            classifier.close();
-            classifier = null;
+            return;
         }
         try {
             classifier = new Classifier(this, gameMode);
@@ -142,7 +160,6 @@ public class ClassifierActivity extends CameraActivity implements OnImageAvailab
     }
 
     private void addFoundObject(String foundObject) {
-        Log.d("RAUL", "Adding object " + foundObject);
         foundObjects.add(foundObject);
     }
 }
