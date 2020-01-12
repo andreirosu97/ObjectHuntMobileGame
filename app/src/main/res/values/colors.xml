@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#93a2f7</color>
+    <color name="colorPrimary">#3349B3</color>
     <color name="colorPrimaryDark">#16193e</color>
     <color name="colorAccent">#bdc5f5</color>
     <color name="textColorPrimary">#dedfec</color>
@@ -10,6 +10,7 @@
     <color name="titleColor">#16193e</color>
     <color name="unselectedMenuButton">#dedfec</color>
     <color name="selectedMenuButton">#1DE9B6</color>
+    <color name="selectedMenuButtonDark">#11795D</color>
     <color name="casualTextColor">#161F50</color>
     <color name="backgroundText">#D6D4D4</color>
     <color name="rippleColorButtons">#253CBE</color>

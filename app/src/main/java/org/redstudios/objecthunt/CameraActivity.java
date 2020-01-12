@@ -69,6 +69,8 @@ public abstract class CameraActivity extends AppCompatActivity
     protected String gameMode;
     protected Boolean isObjectFound = false;
 
+    protected int thresholdAccuracy = 30;
+
     protected ArrayList<String> foundObjects = new ArrayList<>();
     protected Integer totalCurrentPoints = 0;
     private Integer timeLimit = 20;
@@ -101,7 +103,9 @@ public abstract class CameraActivity extends AppCompatActivity
     };
 
     public void addTime(Integer time) {
-        timeLimit = timeLimit + time;
+        if (time > 0) {
+            timeLimit = timeLimit + time;
+        }
     }
 
     @Override
@@ -462,7 +466,7 @@ public abstract class CameraActivity extends AppCompatActivity
 
     @UiThread
     protected void updateProgressBar(int targetObjPercentage) {
-        closenessProgressBar.setProgress(100 - targetObjPercentage);
+        closenessProgressBar.setProgress(100 - (targetObjPercentage * 100 / thresholdAccuracy));
     }
 
     @UiThread

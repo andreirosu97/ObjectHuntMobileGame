@@ -1,5 +1,6 @@
 package org.redstudios.objecthunt;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -10,6 +11,8 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.util.Size;
 import android.util.TypedValue;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.redstudios.objecthunt.eviroment.BorderedText;
 import org.redstudios.objecthunt.eviroment.Logger;
@@ -29,7 +32,6 @@ public class ClassifierActivity extends CameraActivity implements OnImageAvailab
     private Integer sensorOrientation;
     private Classifier classifier;
     private BorderedText borderedText;
-    private int thresholdAccuracy = 10;
     private Handler mHandler = new Handler();
     private Boolean isPostedEndGame = false;
 
@@ -88,7 +90,7 @@ public class ClassifierActivity extends CameraActivity implements OnImageAvailab
                 totalCurrentPoints = getCurrentPoints() + 100 + foundObjects.size() * 25;
                 addFoundObject(classifier.popPeekObject());
                 isObjectFound = true;
-                addTime(21 - foundObjects.size());
+                addTime(20 - foundObjects.size());
                 //TODO Make dialog where gj and show next object
                 //TODO Play sound or sth +- vibrate flash the screen in one color
             } else if (!isPostedEndGame) { //ESTI UN ZEU
@@ -111,7 +113,6 @@ public class ClassifierActivity extends CameraActivity implements OnImageAvailab
                                     updateProgressBar(targetObjPercentage);
                                     if (targetObjPercentage > thresholdAccuracy) {
                                         updateTotalPoints();
-                                        updateTextViewTargetObject(classifier.getPeekObject());
                                     }
                                 });
                     }
@@ -131,6 +132,7 @@ public class ClassifierActivity extends CameraActivity implements OnImageAvailab
         if (requestCode == NEXT_IMAGE_REQUEST_CODE) {
             LOGGER.d("Ready for next image");
             isObjectFound = false;
+            updateTextViewTargetObject(classifier.getPeekObject());
             readyForNextImage();
         }
     }
@@ -161,5 +163,21 @@ public class ClassifierActivity extends CameraActivity implements OnImageAvailab
 
     private void addFoundObject(String foundObject) {
         foundObjects.add(foundObject);
+    }
+
+    private void doExit() {
+        new MaterialAlertDialogBuilder(this, R.style.AlertDialogOnExit)
+                .setIcon(R.drawable.warning_icon)
+                .setTitle("Giving up ?")
+                .setMessage("What do you want to do ?\nContinue the game\nEnd the game, go to the end screen\nDrop the game, all your progress will be lost")
+                .setPositiveButton("Continue", null)
+                .setNeutralButton("End game", (DialogInterface dialog, int which) -> openGameOverScreen())
+                .setNegativeButton("Drop game", (DialogInterface dialog, int which) -> finish())
+                .show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        doExit();
     }
 }

@@ -1,7 +1,9 @@
 package org.redstudios.objecthunt.model;
 
+import android.app.Activity;
 import android.util.Log;
 import android.util.Pair;
+import android.widget.Toast;
 
 import com.google.android.gms.games.AnnotatedData;
 import com.google.android.gms.games.LeaderboardsClient;
@@ -95,8 +97,7 @@ public class AppState extends Observable {
                 for (String key : topScore.keySet()) {
                     Log.i("User Info", key + " has the score of " + topScore.get(key));
                     Long l = (Long) topScore.get(key);
-
-                    submitPlayerScore(key, (int) (long) l);
+                    submitPlayerScore(key, (int) (long) l, false, null);
                 }
                 objectsFound = (HashMap<String, Object>) document.get("objectsFound");
                 Log.i("User Info", "User ID : " + userId);
@@ -254,7 +255,7 @@ public class AppState extends Observable {
         return scores;
     }
 
-    public void submitPlayerScore(String gameMode, Integer score) {
+    public void submitPlayerScore(String gameMode, Integer score, Boolean showMessage, Activity activity) {
         String ldbId = "";
         switch (gameMode) {
             case GameModes.INDOOR:
@@ -267,14 +268,18 @@ public class AppState extends Observable {
                 ldbId = leaderboardsIds.get(2);
                 break;
         }
+        if (ldbId.equals("")) {
+            return;
+        }
         leaderboardsClient.submitScoreImmediate(ldbId, score).addOnCompleteListener(
                 (@NonNull Task<ScoreSubmissionData> task) -> {
                     if (task.isSuccessful()) {
-                        Log.d(TAG, "Success " + task.getResult().getLeaderboardId() + " " + task.getResult().getPlayerId());
-                        this.setChanged();
-                        notifyObservers();
+                        Log.d("AppState subscore", "Success " + task.getResult().getLeaderboardId() + " " + task.getResult().getScoreResult(TIME_SPAN_ALL_TIME) + " " + task.getResult().getPlayerId());
+                        if (showMessage) {
+                            Toast.makeText(activity, "Successfully updated the leaderboard.", Toast.LENGTH_SHORT).show();
+                        }
                     } else {
-                        Log.e(TAG, "Fail");
+                        Log.e("AppState subscore", "Fail" + task.getException().toString());
                     }
                 });
     }

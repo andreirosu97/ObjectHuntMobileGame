@@ -2,6 +2,7 @@ package org.redstudios.objecthunt;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -30,6 +31,7 @@ public class GameOverActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Log.d("AppState", "Creating game over Activity");
         Bundle gameResult = getIntent().getExtras();
         setContentView(R.layout.game_over_activity);
         objFoundList = findViewById(R.id.ObjFoundList);
@@ -53,11 +55,10 @@ public class GameOverActivity extends AppCompatActivity {
         textPoints.setText(topPoints.toString());
 
         gameMode = gameResult.getString("GameMode");
-        AppState.get().submitPlayerScore(gameMode, topPoints);
+        AppState.get().submitPlayerScore(gameMode, topPoints, true, this);
         AppState.get().setTopScore(gameMode, topPoints);
         AppState.get().setNeedsUpdate(gameMode);
 
-//        Log.d("RAUL", "Set objects ");
         textObjetcts.setText(Integer.toString(foundObjects.size()));
 
         playButton.setOnClickListener((View view) -> {

@@ -6,11 +6,17 @@
     android:layout_height="wrap_content"
     tools:context=".model.ImageFoundDialog">
 
+    <TextView
+        android:id="@+id/object_found_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Desktop Computer"></TextView>
     <Button
         android:id="@+id/continue_button"
         style="@style/Widget.ObjHunt.Button"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
         android:textSize="35sp"
         android:layout_gravity="center"
         android:text="Continue" />
