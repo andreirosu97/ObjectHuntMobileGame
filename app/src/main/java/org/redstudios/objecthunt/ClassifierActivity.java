@@ -16,6 +16,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.redstudios.objecthunt.eviroment.BorderedText;
 import org.redstudios.objecthunt.eviroment.Logger;
+import org.redstudios.objecthunt.model.GameMode;
 import org.redstudios.objecthunt.model.ImageFoundDialog;
 import org.redstudios.objecthunt.tf.Classifier;
 
@@ -38,7 +39,7 @@ public class ClassifierActivity extends CameraActivity implements OnImageAvailab
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        gameMode = getIntent().getExtras().getString("GameMode");
+        gameMode = (GameMode) getIntent().getExtras().getSerializable("GameMode");
     }
 
     @Override

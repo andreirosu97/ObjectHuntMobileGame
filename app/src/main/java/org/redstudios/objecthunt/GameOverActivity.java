@@ -10,6 +10,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import org.redstudios.objecthunt.model.AppState;
+import org.redstudios.objecthunt.model.GameMode;
 
 import java.util.ArrayList;
 
@@ -24,7 +25,7 @@ public class GameOverActivity extends AppCompatActivity {
     private Button playButton;
     private Button backButton;
     private Integer topPoints;
-    private String gameMode;
+    private GameMode gameMode;
     private ArrayList<String> foundObjects;
 
     @Override
@@ -54,11 +55,10 @@ public class GameOverActivity extends AppCompatActivity {
 //        Log.d("RAUL", "Set points ");
         textPoints.setText(topPoints.toString());
 
-        gameMode = gameResult.getString("GameMode");
+        gameMode = (GameMode) gameResult.getSerializable("GameMode");
         AppState.get().submitPlayerScore(gameMode, topPoints, true, this);
         AppState.get().setTopScore(gameMode, topPoints);
         AppState.get().updatePlayerData();
-        AppState.get().setNeedsUpdate(gameMode);
 
         textObjetcts.setText(Integer.toString(foundObjects.size()));
 

@@ -41,14 +41,15 @@ public class PlayerData {
         this.topScore = topScore;
     }
 
-    public void submitPlayerScore(String gameMode, Integer newScore) {
-        Long score = (Long) topScore.get(gameMode);
+    public void submitPlayerScore(GameMode gameMode, Integer newScore) {
+        String gameModeName = gameMode.getGameModeName();
+        Long score = (Long) topScore.get(gameModeName);
         if (score != null) {
             if (newScore > score) {
-                topScore.put(gameMode, newScore);
+                topScore.put(gameModeName, newScore);
             }
         } else {
-            topScore.put(gameMode, newScore);
+            topScore.put(gameModeName, newScore);
         }
     }
 

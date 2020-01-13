@@ -19,7 +19,7 @@
     <string name="shr_product_description">Secondary text</string>
 
 
-    <string name="game_mode_button_1_text">Indoor</string>
+    <string name="button_placeholder">--placeholder--</string>
     <string name="change_game_mode_text">Change GameMode</string>
     <string name="game_mode_button_2_text">Outdoor</string>
     <string name="game_mode_button_3_text">Office</string>

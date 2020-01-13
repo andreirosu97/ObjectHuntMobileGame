@@ -30,6 +30,7 @@ import org.redstudios.objecthunt.cameraactivity_fragments.CameraConnectionFragme
 import org.redstudios.objecthunt.cameraactivity_fragments.LegacyCameraConnectionFragment;
 import org.redstudios.objecthunt.eviroment.ImageUtils;
 import org.redstudios.objecthunt.eviroment.Logger;
+import org.redstudios.objecthunt.model.GameMode;
 import org.redstudios.objecthunt.tf.Classifier.Recognition;
 
 import java.nio.ByteBuffer;
@@ -66,7 +67,7 @@ public abstract class CameraActivity extends AppCompatActivity
             textViewTargetObject,
             timerTextView,
             pointsTextView;
-    protected String gameMode;
+    protected GameMode gameMode;
     protected Boolean isObjectFound = false;
 
     protected int thresholdAccuracy = 30;
@@ -489,7 +490,7 @@ public abstract class CameraActivity extends AppCompatActivity
         Intent intent = new Intent(this, GameOverActivity.class);
         Bundle gameResult = new Bundle();
         gameResult.putInt("Points", getCurrentPoints());
-        gameResult.putString("GameMode", gameMode);
+        gameResult.putSerializable("GameMode", gameMode);
         gameResult.putStringArrayList("FoundObjects", foundObjects);
         intent.putExtras(gameResult);
         startActivityForResult(intent, GAME_OVER_REQUEST_CODE);

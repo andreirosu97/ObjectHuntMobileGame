@@ -14,10 +14,11 @@ import android.widget.TextView;
 
 import org.redstudios.objecthunt.R;
 import org.redstudios.objecthunt.model.AppState;
+import org.redstudios.objecthunt.model.GameMode;
 import org.redstudios.objecthunt.model.LeaderboardLVAdapter;
 import org.redstudios.objecthunt.utils.CallbackableWithBoolean;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -29,7 +30,7 @@ public class LeaderboardFragment extends Fragment implements CallbackableWithBoo
     private Button changeButton;
     private TextView gameModeTitle;
     private ProgressBar progressBar;
-    private ArrayList<String> gameModes;
+    private List<GameMode> gameModes;
     private Integer currentGameMode;
     private ViewGroup header;
     private RelativeLayout ldbLay;
@@ -47,8 +48,7 @@ public class LeaderboardFragment extends Fragment implements CallbackableWithBoo
         gameModeTitle = view.findViewById(R.id.game_mode_title);
         header = view.findViewById(R.id.leader_header);
         ldbLay = view.findViewById(R.id.ldb_rel_lay);
-        gameModes = AppState.get().getGameModes();
-        currentGameMode = 0;
+        gameModes = AppState.get().getGameModesList();
 
         fadeInAnimation.setDuration(ANIM_DURATION);
         fadeInAnimation.setFillAfter(true);
@@ -64,18 +64,19 @@ public class LeaderboardFragment extends Fragment implements CallbackableWithBoo
 
         header = (ViewGroup) inflater.inflate(R.layout.leader_board_header, listUsers, false);
         listUsers.addHeaderView(header);
-        loadLeaderBoard(AppState.GameModes.INDOOR);
+        loadLeaderBoard(AppState.get().getRandomGameMode());
         return view;
     }
 
-    private void loadLeaderBoard(String gameMode) {
+    private void loadLeaderBoard(GameMode gameMode) {
         if (getActivity() != null) {
+            currentGameMode = gameModes.indexOf(gameMode);
             ldbLay.setVisibility(View.GONE);
             changeButton.setVisibility(View.GONE);
             listUsers.setVisibility(View.GONE);
             gameModeTitle.setVisibility(View.GONE);
             progressBar.setVisibility(View.VISIBLE);
-            gameModeTitle.setText(gameMode);
+            gameModeTitle.setText(gameMode.getGameModeName());
             progressBar.startAnimation(fadeInAnimation);
             handler.postDelayed(() -> {
                 AppState.get().loadLeaderBoard(gameMode, this);
@@ -100,7 +101,7 @@ public class LeaderboardFragment extends Fragment implements CallbackableWithBoo
         }
     }
 
-    private String getNextGameMode() {
+    private GameMode getNextGameMode() {
         if (currentGameMode == gameModes.size() - 1) {
             currentGameMode = 0;
         } else {

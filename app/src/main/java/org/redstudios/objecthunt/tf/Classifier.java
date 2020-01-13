@@ -9,7 +9,7 @@ import android.os.Trace;
 import android.util.Log;
 
 import org.redstudios.objecthunt.eviroment.Logger;
-import org.redstudios.objecthunt.model.AppState;
+import org.redstudios.objecthunt.model.GameMode;
 import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.Interpreter;
 import org.tensorflow.lite.gpu.GpuDelegate;
@@ -56,7 +56,7 @@ public class Classifier {
     private static final float IMAGE_STD = 1.0f;
 
     /** The model type used for classification. */
-    public static String gameMode;
+    public static GameMode gameMode;
 
     /**
      * Quantized MobileNet requires additional dequantization to the output probability.
@@ -215,7 +215,7 @@ public class Classifier {
         }
     }
 
-    public Classifier(Activity activity, String gameMode) throws IOException {
+    public Classifier(Activity activity, GameMode gameMode) throws IOException {
         LOGGER.d("Creating classifier");
         //Load model out from the model file.
         Classifier.gameMode = gameMode;
@@ -224,7 +224,7 @@ public class Classifier {
         tflite = new Interpreter(tfliteModel, tfliteOptions);
 
         // Loads labels out from the label file.
-        readLabelsAndLabelFilter(activity,gameMode);
+        readLabelsAndLabelFilter(activity);
 
         // Reads type and shape of input and output tensors, respectively.
         int imageTensorIndex = 0;
@@ -350,7 +350,7 @@ public class Classifier {
      */
     private static List<Recognition> getTopKProbability(Map<String, Float> labelProb) {
 
-        ArrayList<String> filter = AppState.get().getObjectForGameMode(gameMode);
+        ArrayList<String> filter = gameMode.getObjectList();
         // Find the best classifications.
         PriorityQueue<Recognition> pq =
                 new PriorityQueue<>(
@@ -409,10 +409,10 @@ public class Classifier {
         return new NormalizeOp(PROBABILITY_MEAN, PROBABILITY_STD);
     }
 
-    private void readLabelsAndLabelFilter(Activity activity, String gameMode)
+    private void readLabelsAndLabelFilter(Activity activity)
             throws IOException{
         Log.d(TAG, "Starting queue populating");
-        ArrayList<String> objList = AppState.get().getObjectForGameMode(gameMode);
+        ArrayList<String> objList = gameMode.getObjectList();
         targetObjects = new LinkedList<>();
         Collections.shuffle(objList, new Random(System.currentTimeMillis() % 5000));
         targetObjects.addAll(objList);

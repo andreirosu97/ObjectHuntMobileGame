@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -33,6 +34,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
 import org.redstudios.objecthunt.model.AppState;
+import org.redstudios.objecthunt.utils.CallbackableWithBoolean;
 
 import java.util.HashMap;
 
@@ -41,7 +43,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import static com.google.android.gms.common.api.CommonStatusCodes.NETWORK_ERROR;
 
-public class SignInActivity extends AppCompatActivity {
+public class SignInActivity extends AppCompatActivity implements CallbackableWithBoolean {
 
     private static final String TAG = "SignInTAG";
     private static final String PERMISSION_CAMERA = Manifest.permission.CAMERA;
@@ -50,12 +52,30 @@ public class SignInActivity extends AppCompatActivity {
     private GamesClient gamesClient;
     private static final int RC_SIGN_IN = 1;
     private static final int PERMISSIONS_REQUEST = 2;
+    private FirebaseFirestore firebaseFirestore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
+        firebaseFirestore = FirebaseFirestore.getInstance();
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .build();
+        firebaseFirestore.setFirestoreSettings(settings);
+        AppState.get().setFirebaseFirestore(firebaseFirestore, this);
+    }
+
+    @Override
+    public void callback(Boolean result) {
+        if (!result) {
+            Toast.makeText(
+                    SignInActivity.this,
+                    "There was a problem getting the data from the server, check your network connection and restart the app.",
+                    Toast.LENGTH_LONG)
+                    .show();
+            return;
+        }
         if (!isNetworkConnected()) {
             Log.e("SignInTAG", "No network connected.");
             startErrorDialogNetworkError();
@@ -71,21 +91,15 @@ public class SignInActivity extends AppCompatActivity {
     private void startSignIn() {
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN)
                 .requestServerAuthCode(getString(R.string.default_web_client_id))
-                .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         signInSilently();
     }
 
     private void launchApplication() {
-        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
-                .build();
-        firebaseFirestore.setFirestoreSettings(settings);
-
-        AppState.get().setFirebaseFirestore(firebaseFirestore);
         FirebaseUser user = AppState.get().getActiveUser();
 
+        Log.d("User Info", "User id: " + user.getUid());
         DocumentReference userDocument = firebaseFirestore.collection("users").document(user.getUid());
 
         userDocument.get().addOnCompleteListener((@NonNull Task<DocumentSnapshot> task) -> {
@@ -174,14 +188,16 @@ public class SignInActivity extends AppCompatActivity {
                 printAcc(account);
                 gamesClient = Games.getGamesClient(this, account);
                 AppState.get().setLeaderboardsClient(Games.getLeaderboardsClient(this, account));
-                //AppState.get().updatePlayerScores();
                 gamesClient.setViewForPopups(findViewById(R.id.signInView)).addOnCompleteListener(
                         this,
                         (@NonNull Task<Void> task2) -> {
                             if (task2.isSuccessful()) {
                                 // The signed in account is stored in the task's result.
                                 Log.d(TAG, "Popup 2!");
-                                firebaseAuthWithPlayGames(account);
+                                Handler handler = new Handler();
+                                handler.postDelayed(() -> {
+                                    firebaseAuthWithPlayGames(account);
+                                }, 2000);
                             }
                         });
             }
@@ -212,7 +228,11 @@ public class SignInActivity extends AppCompatActivity {
                                                 if (task2.isSuccessful()) {
                                                     // The signed in account is stored in the task's result.
                                                     Log.d(TAG, "Popup !");
-                                                    firebaseAuthWithPlayGames(signedInAccount);
+                                                    Handler handler = new Handler();
+                                                    handler.postDelayed(() -> {
+                                                        firebaseAuthWithPlayGames(signedInAccount);
+                                                    }, 2000);
+
                                                 }
                                             });
                                 } else {
