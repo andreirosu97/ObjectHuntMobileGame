@@ -87,17 +87,11 @@ public class ClassifierActivity extends CameraActivity implements OnImageAvailab
         int targetObjPercentage = (int) (float) classifier.getTargetObjPercentage();
 
         if (targetObjPercentage > thresholdAccuracy) {
-            if (!classifier.checkEmptyQueue()) {
-                totalCurrentPoints = getCurrentPoints() + 100 + foundObjects.size() * 25;
-                addFoundObject(classifier.popPeekObject());
-                isObjectFound = true;
-                addTime(20 - foundObjects.size());
-                //TODO Make dialog where gj and show next object
-                //TODO Play sound or sth +- vibrate flash the screen in one color
-            } else if (!isPostedEndGame) { //ESTI UN ZEU
-                mHandler.postDelayed(endGame, 200);
-                isPostedEndGame = true;
-            }
+            totalCurrentPoints = getCurrentPoints() + 100 + foundObjects.size() * 25;
+            addFoundObject(classifier.popPeekObject());
+            isObjectFound = true;
+            addTime(20 - foundObjects.size());
+            //TODO Play sound or sth +- vibrate flash the screen in one color
         }
 
         runInBackground(
@@ -131,10 +125,16 @@ public class ClassifierActivity extends CameraActivity implements OnImageAvailab
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == NEXT_IMAGE_REQUEST_CODE) {
-            LOGGER.d("Ready for next image");
-            isObjectFound = false;
-            updateTextViewTargetObject(classifier.getPeekObject());
-            readyForNextImage();
+            if (classifier.isEmptyQueue()) {
+                //TODO You won the game wow
+                openGameOverScreen();
+            } else {
+                LOGGER.d("Ready for next image");
+                isObjectFound = false;
+                updateTextViewTargetObject(classifier.getPeekObject());
+                readyForNextImage();
+            }
+
         }
     }
 

@@ -28,12 +28,14 @@ import org.tensorflow.lite.support.label.TensorLabel;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.nio.MappedByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -55,7 +57,9 @@ public class Classifier {
 
     private static final float IMAGE_STD = 1.0f;
 
-    /** The model type used for classification. */
+    /**
+     * The model type used for classification.
+     */
     public static GameMode gameMode;
 
     /**
@@ -278,13 +282,18 @@ public class Classifier {
                 new TensorLabel(labels, probabilityProcessor.process(outputProbabilityBuffer))
                         .getMapWithFloatValue();
 
+
         for (Map.Entry<String, Float> entry : labeledProbability.entrySet()) {
             String k = entry.getKey();
             Float v = entry.getValue();
-            if (k.equals(targetObjects.peek())) {
-                target_perc = 100 * v;
+            String objectToFind = targetObjects.peek();
+            if (objectToFind != null) {
+                if (k.toLowerCase().equals(objectToFind.toLowerCase())) {
+                    target_perc = 100 * v;
+                }
             }
         }
+
         Trace.endSection();
 
         // Gets top-k results.
@@ -351,6 +360,10 @@ public class Classifier {
     private static List<Recognition> getTopKProbability(Map<String, Float> labelProb) {
 
         ArrayList<String> filter = gameMode.getObjectList();
+        ListIterator<String> iterator = filter.listIterator();
+        while (iterator.hasNext()) {
+            iterator.set(iterator.next().toLowerCase());
+        }
         // Find the best classifications.
         PriorityQueue<Recognition> pq =
                 new PriorityQueue<>(
@@ -410,7 +423,7 @@ public class Classifier {
     }
 
     private void readLabelsAndLabelFilter(Activity activity)
-            throws IOException{
+            throws IOException {
         Log.d(TAG, "Starting queue populating");
         ArrayList<String> objList = gameMode.getObjectList();
         targetObjects = new LinkedList<>();
@@ -434,7 +447,7 @@ public class Classifier {
         return targetObjects.peek();
     }
 
-    public Boolean checkEmptyQueue() {
+    public Boolean isEmptyQueue() {
         return targetObjects.isEmpty();
     }
 }
