@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
                 .setIcon(R.drawable.warning_icon)
                 .setTitle("Leave application ?")
                 .setMessage("Are you sure you want to leave the application ?")
-                .setPositiveButton("Yes", (DialogInterface dialog, int which) -> finish())
+                .setPositiveButton("Yes", (DialogInterface dialog, int which) -> finishAffinity())
                 .setNegativeButton("No", null)
                 .show();
     }

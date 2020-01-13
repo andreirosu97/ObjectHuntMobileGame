@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Observable;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,7 +33,7 @@ import static androidx.constraintlayout.widget.Constraints.TAG;
 import static com.google.android.gms.games.leaderboard.LeaderboardVariant.COLLECTION_PUBLIC;
 import static com.google.android.gms.games.leaderboard.LeaderboardVariant.TIME_SPAN_ALL_TIME;
 
-public class AppState extends Observable {
+public class AppState {
     private static AppState singletonObject;
     private HashMap<String, ArrayList<String>> dataSets;
 
@@ -55,8 +54,7 @@ public class AppState extends Observable {
         needsUpdate.put(GameModes.OFFICE, true);
     }
 
-
-    ArrayList<String> leaderboardsIds = new ArrayList<>(
+    private ArrayList<String> leaderboardsIds = new ArrayList<>(
             Arrays.asList("CgkI3s2wtYQeEAIQAQ", "CgkI3s2wtYQeEAIQAw", "CgkI3s2wtYQeEAIQBA"));
 
     public static synchronized AppState get() {
@@ -71,11 +69,7 @@ public class AppState extends Observable {
     private FirebaseUser activeUser;
     private LeaderboardsClient leaderboardsClient;
 
-    //TODO convert this data into userAdapter for the database
-    private String userId;
-    private String nickName;
-    private HashMap<String, Object> topScore;
-    private HashMap<String, Object> objectsFound;
+    private PlayerData playerData;
     private List<LeaderboardItem> scores = new ArrayList<>();
     private HashMap<String, Boolean> needsUpdate = new HashMap<>();
 
@@ -84,6 +78,10 @@ public class AppState extends Observable {
         this.userDocument = userDocument;
         userDocument.addSnapshotListener((@Nullable DocumentSnapshot document,
                                           @Nullable FirebaseFirestoreException e) -> {
+            String nickName;
+            HashMap<String, Object> topScore;
+            HashMap<String, Object> objectsFound;
+
             if (e != null) {
                 Log.w(TAG, "Listen failed.", e);
                 return;
@@ -91,23 +89,19 @@ public class AppState extends Observable {
 
             if (document != null && document.exists()) {
                 Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                userId = document.getId();
                 nickName = document.getString("nickName");
+                objectsFound = (HashMap<String, Object>) document.get("objectsFound");
                 topScore = (HashMap<String, Object>) document.get("topScore");
+
+                playerData = new PlayerData(nickName, objectsFound, topScore);
+
                 for (String key : topScore.keySet()) {
                     Log.i("User Info", key + " has the score of " + topScore.get(key));
                     Long l = (Long) topScore.get(key);
                     submitPlayerScore(key, (int) (long) l, false, null);
                 }
-                objectsFound = (HashMap<String, Object>) document.get("objectsFound");
-                Log.i("User Info", "User ID : " + userId);
-                Log.i("User Info", "Nickname : " + nickName);
-                Log.i("User Info", "TopScore : " + topScore);
-                for (String key : objectsFound.keySet()) {
-                    Log.i("User Info", key + " was found " + objectsFound.get(key) + " times");
-                }
-                this.setChanged();
-                notifyObservers();
+
+                Log.d("User Info", playerData.toString());
             } else {
                 Log.d(TAG, "Current data: null");
             }
@@ -150,54 +144,35 @@ public class AppState extends Observable {
         this.activeUser = activeUser;
     }
 
-    private void updateDatabaseField(String fieldName, Object value) {
+    public void updatePlayerData() { //Updates the server side database
         userDocument
-                .update(fieldName, value)
+                .set(playerData)
                 .addOnSuccessListener((Void aVoid) -> {
-                    Log.i(TAG, "Success on updating the " + fieldName);
-                    setChanged();
-                    notifyObservers();
+                    Log.d(TAG, "Success on updating playerdata " + playerData.toString());
                 })
-                .addOnFailureListener((@NonNull Exception e) -> Log.e(TAG, "Failed on updating the " + fieldName));
+                .addOnFailureListener((@NonNull Exception e) -> Log.e(TAG, "Failed on updating the player data : " + e));
     }
 
     public String getNickName() {
-        return nickName;
+        return playerData.getNickName();
     }
 
     public void setNickName(String nickName) {
-        this.nickName = nickName;
-        updateDatabaseField("nickName", nickName);
+        playerData.setNickName(nickName);
     }
 
     public void setTopScore(String gameMode, Integer newScore) {
-        Long score = (Long) this.topScore.get(gameMode);
-        if (score != null) {
-            if (newScore > score) {
-                this.topScore.put(gameMode, newScore);
-            }
-        } else {
-            this.topScore.put(gameMode, newScore);
-        }
-        updateDatabaseField("topScore", this.topScore);
+        playerData.submitPlayerScore(gameMode, newScore);
     }
 
     public void addToObjetsFound(List<String> objectsFound) {
-        for (String objectName : objectsFound) {
-            Long value = (Long) this.objectsFound.get(objectName);
-            if (value != null) {
-                this.objectsFound.put(objectName, value + 1);
-            } else {
-                this.objectsFound.put(objectName, 1);
-            }
-        }
-        updateDatabaseField("objectsFound", this.objectsFound);
+        playerData.addFoundObjects(objectsFound);
     }
 
     public List<Pair<String, String>> getListOfObjectsFound() {
         List<Pair<String, String>> objList = new ArrayList<>();
-        for (String key : objectsFound.keySet()) {
-            Object value = objectsFound.get(key);
+        for (String key : playerData.getObjectsFound().keySet()) {
+            Object value = playerData.getObjectsFound().get(key);
             if (value != null) {
                 objList.add(Pair.create(key, value.toString()));
             }
@@ -279,15 +254,15 @@ public class AppState extends Observable {
                             Toast.makeText(activity, "Successfully updated the leaderboard.", Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        Log.e("AppState subscore", "Fail" + task.getException().toString());
+                        Log.e("AppState subscore", "Fail " + task.getException().toString());
                     }
                 });
     }
 
     public List<Pair<String, String>> getPlayerScores() {
         List<Pair<String, String>> scores = new ArrayList<>();
-        for (String key : topScore.keySet()) {
-            Object value = topScore.get(key);
+        for (String key : playerData.getTopScore().keySet()) {
+            Object value = playerData.getTopScore().get(key);
             if (value != null) {
                 scores.add(Pair.create(key, value.toString()));
             }

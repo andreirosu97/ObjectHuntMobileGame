@@ -23,8 +23,6 @@ import org.redstudios.objecthunt.model.AppState;
 import org.redstudios.objecthunt.model.ObjectsAdapter;
 
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -33,7 +31,7 @@ import androidx.fragment.app.FragmentActivity;
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
 
-public class ProfileFragment extends Fragment implements Observer {
+public class ProfileFragment extends Fragment {
 
     private ListView listScores;
     private ListView listTopScores;
@@ -67,7 +65,6 @@ public class ProfileFragment extends Fragment implements Observer {
         super.onActivityCreated(savedInstanceState);
         initializeListeners();
         updateProfileData();
-        AppState.get().addObserver(this);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -85,6 +82,7 @@ public class ProfileFragment extends Fragment implements Observer {
         editName.setOnFocusChangeListener((View view, boolean hasFocus) -> {
             if (!hasFocus) {
                 AppState.get().setNickName(editName.getText().toString());
+                AppState.get().updatePlayerData();
                 switcher.showPrevious();
                 hideKeyboardFrom(view);
             } else {
@@ -110,7 +108,6 @@ public class ProfileFragment extends Fragment implements Observer {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        AppState.get().deleteObserver(this);
     }
 
     private void hideKeyboardFrom(View view) {
@@ -140,16 +137,9 @@ public class ProfileFragment extends Fragment implements Observer {
             ObjectsAdapter topScoresAdapter = new ObjectsAdapter(this.getActivity(), R.layout.two_column_item_list, topScores);
             listTopScores.setAdapter(topScoresAdapter);
 
-//            topScore.setText(String.format("%s", AppState.get().getTopScore().toString()));
             List<Pair<String, String>> objectsFound = AppState.get().getListOfObjectsFound();
             ObjectsAdapter objectsFoundAdapter = new ObjectsAdapter(this.getActivity(), R.layout.two_column_item_list, objectsFound);
             listScores.setAdapter(objectsFoundAdapter);
         }
-    }
-
-    @Override
-    public void update(Observable observable, Object o) {
-        Log.i(TAG, "Updating profile data.");
-        updateProfileData();
     }
 }
