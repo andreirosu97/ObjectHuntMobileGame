@@ -2,21 +2,26 @@ package org.redstudios.objecthunt.mainactivity_fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.google.android.material.button.MaterialButton;
 
 import org.redstudios.objecthunt.ClassifierActivity;
 import org.redstudios.objecthunt.R;
 import org.redstudios.objecthunt.model.AppState;
 import org.redstudios.objecthunt.model.GameMode;
+import org.redstudios.objecthunt.model.GameModeAdapter;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import static androidx.recyclerview.widget.DividerItemDecoration.VERTICAL;
 
 /**
  * Fragment representing the login screen for Shrine.
@@ -24,40 +29,65 @@ import androidx.fragment.app.Fragment;
 public class GameModeSelectFragment extends Fragment {
 
     private View view;
+    private RecyclerView listOfGameModes;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager layoutManager;
+
 
     @Override
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.game_mode_select_fragment, container, false);
-        List<GameMode> gms = AppState.get().getGameModesList();
+        ArrayList<GameMode> gameModesList = (ArrayList<GameMode>) AppState.get().getGameModesList();
+        listOfGameModes = view.findViewById(R.id.game_modes_list_view);
+        listOfGameModes.setHasFixedSize(false);
 
-        MaterialButton outdoorBtn = view.findViewById(R.id.game_mode_button_1);
-        MaterialButton indoorBtn = view.findViewById(R.id.game_mode_button_2);
-        MaterialButton officeBtn = view.findViewById(R.id.game_mode_button_3);
-        outdoorBtn.setText(gms.get(0).getGameModeName());
-        indoorBtn.setText(gms.get(1).getGameModeName());
-        officeBtn.setText(gms.get(2).getGameModeName());
+        layoutManager = new LinearLayoutManager(this.getActivity());
+        listOfGameModes.setLayoutManager(layoutManager);
 
-        outdoorBtn.setOnClickListener((View view) -> {
-            Intent intent = new Intent(getActivity(), ClassifierActivity.class);
-            intent.putExtra("GameMode", gms.get(0));
-            startActivity(intent);
+//        MaterialButton outdoorBtn = view.findViewById(R.id.game_mode_button_1);
+//        MaterialButton indoorBtn = view.findViewById(R.id.game_mode_button_2);
+//        MaterialButton officeBtn = view.findViewById(R.id.game_mode_button_3);
+
+        GameModeAdapter gameModesAdapter = new GameModeAdapter(gameModesList, new GameModeAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Integer position) {
+                Intent intent = new Intent(getActivity(), ClassifierActivity.class);
+                intent.putExtra("GameMode", gameModesList.get(position));
+                startActivity(intent);
+            }
         });
 
-        indoorBtn.setOnClickListener((View view) -> {
-            Intent intent = new Intent(getActivity(), ClassifierActivity.class);
+        listOfGameModes.setAdapter(gameModesAdapter);
+        DividerItemDecoration itemDecor = new DividerItemDecoration(this.getActivity(), VERTICAL);
+        listOfGameModes.addItemDecoration(itemDecor);
+        Log.d("ANDREI", "SETTING");
 
-            intent.putExtra("GameMode", gms.get(1));
-            startActivity(intent);
-        });
 
-        officeBtn.setOnClickListener((View view) -> {
-            Intent intent = new Intent(getActivity(), ClassifierActivity.class);
+//        outdoorBtn.setText(gameModesList.get(0).getGameModeName());
+//        indoorBtn.setText(gameModesList.get(1).getGameModeName());
+//        officeBtn.setText(gameModesList.get(2).getGameModeName());
 
-            intent.putExtra("GameMode", gms.get(2));
-            startActivity(intent);
-        });
+//        outdoorBtn.setOnClickListener((View view) -> {
+//            Intent intent = new Intent(getActivity(), ClassifierActivity.class);
+//            intent.putExtra("GameMode", gameModesList.get(0));
+//            startActivity(intent);
+//        });
+//
+//        indoorBtn.setOnClickListener((View view) -> {
+//            Intent intent = new Intent(getActivity(), ClassifierActivity.class);
+//
+//            intent.putExtra("GameMode", gameModesList.get(1));
+//            startActivity(intent);
+//        });
+//
+//        officeBtn.setOnClickListener((View view) -> {
+//            Intent intent = new Intent(getActivity(), ClassifierActivity.class);
+//
+//            intent.putExtra("GameMode", gameModesList.get(2));
+//            startActivity(intent);
+//        });
 
         return view;
     }

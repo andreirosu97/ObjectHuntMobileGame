@@ -54,6 +54,13 @@
         <item name="android:textColor">@color/titleColor</item>
     </style>
 
+    <style name="TextAppearance.ObjHunt.Title.Small" parent="TextAppearance.MaterialComponents.Headline4">
+        <item name="textAllCaps">false</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/titleColor</item>
+    </style>
+
     <style name="TextAppearance.ObjHunt.Profile.Title" parent="TextAppearance.MaterialComponents.Headline4">
         <item name="textAllCaps">false</item>
         <item name="android:textStyle">bold</item>
@@ -73,6 +80,12 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textSize">30sp</item>
+    </style>
+
+    <style name="TextAppearance.ObjHunt.Profile.Simple.Light.Text.Small" parent="TextAppearance.MaterialComponents.Headline4">
+        <item name="textAllCaps">false</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">15sp</item>
     </style>
 
     <style name="TextAppearance.ObjHunt.Light.Title" parent="TextAppearance.MaterialComponents.Headline4">
