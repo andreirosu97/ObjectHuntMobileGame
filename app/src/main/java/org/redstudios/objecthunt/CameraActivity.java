@@ -70,7 +70,7 @@ public abstract class CameraActivity extends AppCompatActivity
     protected GameMode gameMode;
     protected Boolean isObjectFound = false;
 
-    protected int thresholdAccuracy = 30;
+    protected int thresholdAccuracy = 35;
 
     protected ArrayList<String> foundObjects = new ArrayList<>();
     protected Integer totalCurrentPoints = 0;

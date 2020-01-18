@@ -28,14 +28,12 @@ import org.tensorflow.lite.support.label.TensorLabel;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.nio.MappedByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -74,7 +72,7 @@ public class Classifier {
 
     protected final String MODEL_PATH = "mobilenet_v1_1.0_224_quant.tflite";
 
-    protected final String LABEL_PATH = "labels.txt";
+    protected final String LABEL_PATH = "labels_out.txt";
 
     protected final Integer NUM_THREADS = 1;
 
@@ -358,12 +356,6 @@ public class Classifier {
      * Gets the top-k results.
      */
     private static List<Recognition> getTopKProbability(Map<String, Float> labelProb) {
-
-        ArrayList<String> filter = gameMode.getObjectList();
-        ListIterator<String> iterator = filter.listIterator();
-        while (iterator.hasNext()) {
-            iterator.set(iterator.next().toLowerCase());
-        }
         // Find the best classifications.
         PriorityQueue<Recognition> pq =
                 new PriorityQueue<>(
@@ -377,8 +369,7 @@ public class Classifier {
                         });
 
         for (Map.Entry<String, Float> entry : labelProb.entrySet()) {
-            if (filter.contains(entry.getKey()))
-                pq.add(new Recognition("" + entry.getKey(), entry.getKey(), entry.getValue(), null));
+            pq.add(new Recognition("" + entry.getKey(), entry.getKey(), entry.getValue(), null));
         }
 
         final ArrayList<Recognition> recognitions = new ArrayList<>();
