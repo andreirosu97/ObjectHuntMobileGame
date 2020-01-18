@@ -109,7 +109,8 @@ public class AppState {
                                         new GameMode(
                                                 document.getId(),
                                                 (String) document.get("leaderboardId"),
-                                                (ArrayList<String>) document.get("Objects"))
+                                                (ArrayList<String>) document.get("Objects"),
+                                                (String) document.get("Description"))
                                 );
                             }
                             callbackClass.callback(true);

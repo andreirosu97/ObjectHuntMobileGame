@@ -8,14 +8,21 @@ import androidx.annotation.NonNull;
 public class GameMode implements Serializable, Comparable {
 
     private String gameModeName;
+
+    public String getDescription() {
+        return description;
+    }
+
+    private String description;
     private String leaderboardId;
     private Boolean leaderboardNeedUpdate;
     private ArrayList<String> objectList;
 
-    public GameMode(String gameModeName, String leaderboardId, ArrayList<String> objectList) {
+    public GameMode(String gameModeName, String leaderboardId, ArrayList<String> objectList, String description) {
         this.gameModeName = gameModeName;
         this.leaderboardId = leaderboardId;
         this.objectList = objectList;
+        this.description = description;
         this.leaderboardNeedUpdate = true;
     }
 

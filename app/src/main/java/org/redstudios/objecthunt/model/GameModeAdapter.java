@@ -43,7 +43,7 @@ public class GameModeAdapter extends RecyclerView.Adapter<GameModeAdapter.GameMo
     public void onBindViewHolder(@NonNull GameModeHolder holder, int position) {
         GameMode currentGameMode = gameModes.get(position);
         holder.gameModeName.setText(currentGameMode.getGameModeName());
-        holder.gameModeDescription.setText("Some description , gen multa sa fie ca sa stie lumea despre ce e vorba ca doar nu suntem aici de azi sau de maine. Ca nah sa se stie ce e vorba ca din batrani stramosi. Vorba aia sa traiasca bostinasii mai !!!");
+        holder.gameModeDescription.setText(currentGameMode.getDescription());
         holder.btn.setOnClickListener(new View.OnClickListener() {
             private Boolean isOpened = false;
             private int newHeight = -1;
