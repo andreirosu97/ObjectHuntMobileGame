@@ -187,5 +187,19 @@
 
     <style name="Theme.ObjHunt.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="TextAppearance.ObjHunt.Pause.Simple.Dark.Text" parent="TextAppearance.MaterialComponents.Headline4">
+        <item name="textAllCaps">false</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:textSize">30sp</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="FullHeightDialog" parent="@style/Base.Theme.AppCompat.Light.Dialog">
+        <item name="android:windowBackground">@drawable/border_line</item>
+        <item name="android:windowTitleStyle">@style/TextAppearance.ObjHunt.Pause.Simple.Dark.Text</item>
+        <item name="android:backgroundDimAmount">0.88</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
 </resources>
 

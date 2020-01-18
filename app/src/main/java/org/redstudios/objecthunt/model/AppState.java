@@ -159,7 +159,7 @@ public class AppState {
                 objList.add(Pair.create(key, value.toString()));
             }
         }
-        return objList;
+        return sortPairStrintString(objList);
     }
 
     public void loadLeaderBoard(GameMode gameMode, CallbackableWithBoolean leaderboardDisplayerActivity) {
@@ -221,7 +221,12 @@ public class AppState {
                 scores.add(Pair.create(key, value.toString()));
             }
         }
-        return scores;
+        return sortPairStrintString(scores);
+    }
+
+    private List<Pair<String, String>> sortPairStrintString(List<Pair<String, String>> userRank) {
+        Collections.sort(userRank, (Pair<String, String> t0, Pair<String, String> t1) -> -Integer.compare(Integer.parseInt(t0.second), Integer.parseInt(t1.second)));
+        return userRank;
     }
 
     public void setLeaderboardsClient(LeaderboardsClient leaderboardsClient) {

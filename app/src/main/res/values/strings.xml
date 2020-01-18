@@ -33,5 +33,6 @@
     <string name="app_id">1031977838302</string>
     <string name="title_activity_sign_in">SignInActivity</string>
     <string name="top_score_title">Top Scores</string>
+    <string name="obj_found_dialog_title"><u>Yey you found it!</u></string>
 
 </resources>

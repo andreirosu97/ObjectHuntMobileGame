@@ -21,7 +21,7 @@ public class ImageFoundDialog extends AppCompatActivity {
         objectFoundT = findViewById(R.id.object_found_text);
         btn.setOnClickListener((View v) -> finish());
         String objectName = getIntent().getExtras().getString("ObjectName");
-        setTitle("Yey you found it !");
+        setTitle(getString(R.string.obj_found_dialog_title));
         objectFoundT.setText(objectName);
     }
 

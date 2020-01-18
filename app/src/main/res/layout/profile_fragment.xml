@@ -1,55 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/touchInterceptor"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/touchInterceptor"    >
+    android:layout_height="match_parent">
+
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/pageBackground"
+        android:orientation="vertical"
         android:padding="12dp">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="30dp"
-            android:layout_marginBottom="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:background="@drawable/border_line"
             android:orientation="horizontal">
-        <ViewSwitcher
-            android:id="@+id/nameSwitcher"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="2">
 
-            <TextView
-                android:id="@+id/TextViewName"
+            <ViewSwitcher
+                android:id="@+id/nameSwitcher"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textAlignment="center"
-                android:text="Ardei Rosie"
-                android:textAppearance="@style/TextAppearance.ObjHunt.Profile.Title" />
-            <org.redstudios.objecthunt.utils.EditTextV2
-                android:id="@+id/hiddenEditName"
+                android:layout_weight="2">
+
+                <TextView
+                    android:id="@+id/TextViewName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Ardei Rosie"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.ObjHunt.Profile.Title" />
+
+                <org.redstudios.objecthunt.utils.EditTextV2
+                    android:id="@+id/hiddenEditName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="Enter name"
+                    android:maxLength="30"
+                    android:textAppearance="@style/TextAppearance.ObjHunt.Profile.Title"
+                    android:textColor="@color/colorPrimaryDark" />
+            </ViewSwitcher>
+
+            <ImageButton
+                android:id="@+id/EditNameButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="Enter name"
-                android:maxLength="30"
-                android:textAppearance="@style/TextAppearance.ObjHunt.Profile.Title"
-                android:textColor="@color/colorPrimaryDark" />
-        </ViewSwitcher>
-
-        <ImageButton
-            android:id="@+id/EditNameButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="0"
-            android:backgroundTint="@color/colorPrimaryDark"
-            android:src="@drawable/edit_icon" />
+                android:layout_gravity="center_vertical"
+                android:layout_weight="0"
+                android:backgroundTint="@color/colorPrimaryDark"
+                android:src="@drawable/edit_icon" />
         </LinearLayout>
 
         <TextView
@@ -65,34 +68,31 @@
             android:id="@+id/topScores"
             style="@style/Widget.ObjHunt.ListView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="185dp"
             android:background="@android:drawable/dialog_holo_light_frame" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_marginTop="12dp"
             android:background="@android:drawable/dialog_holo_light_frame"
             android:orientation="vertical"
-            android:paddingLeft="26dp"
-            android:paddingTop="26dp"
-            android:paddingRight="26dp"
-            android:paddingBottom="16dp">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="6dp"
-            android:text="Top found objects"
-            android:textAppearance="@style/TextAppearance.ObjHunt.Profile.Simple.Dark.Text" />
+            android:padding="10dp">
 
-        <ListView
-            android:id="@+id/TopObjList"
-            style="@style/Widget.ObjHunt.ListView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:drawable/dialog_holo_light_frame" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="6dp"
+                android:text="Top found objects"
+                android:textAppearance="@style/TextAppearance.ObjHunt.Profile.Simple.Dark.Text" />
+
+            <ListView
+                android:id="@+id/TopObjList"
+                style="@style/Widget.ObjHunt.ListView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:drawable/dialog_holo_light_frame" />
         </LinearLayout>
 
     </LinearLayout>
