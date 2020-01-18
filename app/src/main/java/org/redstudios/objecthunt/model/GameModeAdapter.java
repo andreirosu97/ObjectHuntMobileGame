@@ -78,9 +78,9 @@ public class GameModeAdapter extends RecyclerView.Adapter<GameModeAdapter.GameMo
             }
         });
         holder.bind(position, listener);
-//        if (position%2 == 1) {
-//            holder.itemView.(Color.parseColor("#1E215A"));
-//        }
+        if (position % 2 == 1) {
+            holder.itemView.setBackgroundTintList(holder.itemView.getContext().getResources().getColorStateList(R.color.colorPrimaryDarkSecondTone));
+        }
     }
 
     @Override
