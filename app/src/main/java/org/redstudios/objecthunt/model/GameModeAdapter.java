@@ -44,6 +44,7 @@ public class GameModeAdapter extends RecyclerView.Adapter<GameModeAdapter.GameMo
         GameMode currentGameMode = gameModes.get(position);
         holder.gameModeName.setText(currentGameMode.getGameModeName());
         holder.gameModeDescription.setText(currentGameMode.getDescription());
+        holder.gameModeDescription.setLines(1 + currentGameMode.getDescription().length() / 50);
         holder.btn.setOnClickListener(new View.OnClickListener() {
             private Boolean isOpened = false;
             private int newHeight = -1;
