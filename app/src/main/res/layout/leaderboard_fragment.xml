@@ -30,15 +30,27 @@
             android:textAppearance="@style/TextAppearance.ObjHunt.Profile.Simple.Dark.Text" />
 
         <Button
-            android:id="@+id/change_game_mode"
+            android:id="@+id/prev_game_mode"
             style="@style/Widget.ObjHunt.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/game_mode_title"
-            android:layout_centerHorizontal="true"
-            android:layout_marginEnd="12dp"
+            android:layout_alignParentStart="true"
             android:layout_marginBottom="5dp"
+            android:layout_marginStart="10dp"
             android:text="@string/change_game_mode_text"
+            android:textSize="15sp" />
+
+        <Button
+            android:id="@+id/next_game_mode"
+            style="@style/Widget.ObjHunt.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/game_mode_title"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginEnd="10dp"
+            android:text="@string/next_gamemode"
             android:textSize="15sp" />
 
         <ListView
@@ -46,7 +58,7 @@
             style="@style/Widget.ObjHunt.ListView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/change_game_mode"
+            android:layout_below="@id/prev_game_mode"
             android:background="@android:drawable/dialog_holo_light_frame" />
 
     </RelativeLayout>

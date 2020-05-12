@@ -18,15 +18,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class GameOverActivity extends AppCompatActivity {
-    private ListView objFoundList;
-    private TextView textPoints;
-    private TextView textObjetcts;
-    private Button challengeButton;
-    private Button playButton;
-    private Button backButton;
     private Integer topPoints;
     private GameMode gameMode;
-    private ArrayList<String> foundObjects;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,32 +28,46 @@ public class GameOverActivity extends AppCompatActivity {
         Log.d("AppState", "Creating game over Activity");
         Bundle gameResult = getIntent().getExtras();
         setContentView(R.layout.game_over_activity);
-        objFoundList = findViewById(R.id.ObjFoundList);
-        textObjetcts = findViewById(R.id.TextViewNrObj);
-        textPoints = findViewById(R.id.TextViewPoints);
-        challengeButton = findViewById(R.id.challengeButton);
-        playButton = findViewById(R.id.playButton);
-        backButton = findViewById(R.id.backButton);
+        ListView objFoundList = findViewById(R.id.ObjFoundList);
+        TextView textObjetcts = findViewById(R.id.TextViewNrObj);
+        TextView textPoints = findViewById(R.id.TextViewPoints);
+        TextView foundObjectText = findViewById(R.id.object_found_text);
+        Button challengeButton = findViewById(R.id.challengeButton);
+        Button playButton = findViewById(R.id.playButton);
+        Button backButton = findViewById(R.id.backButton);
 
-//        Log.d("RAUL", "Getting results");
-        foundObjects = gameResult.getStringArrayList("FoundObjects");
-        AppState.get().addToObjetsFound(foundObjects);
-//        Log.d("RAUL", "Create adapter");
-        ArrayAdapter<String> listAdapter = new ArrayAdapter<>(this, R.layout.centered_listview_item, foundObjects);
-//        Log.d("RAUL", "Set adapter");
-        objFoundList.setAdapter(listAdapter);
+        if (gameResult != null) {
+            ArrayList<String> foundObjects = gameResult.getStringArrayList("FoundObjects");
 
-//        Log.d("RAUL", "Points ");
-        topPoints = gameResult.getInt("Points");
-//        Log.d("RAUL", "Set points ");
-        textPoints.setText(topPoints.toString());
+            AppState.get().addToObjetsFound(foundObjects);
 
-        gameMode = (GameMode) gameResult.getSerializable("GameMode");
-        AppState.get().submitPlayerScore(gameMode, topPoints, true, this);
-        AppState.get().setTopScore(gameMode, topPoints);
-        AppState.get().updatePlayerData();
+            if (foundObjects != null && foundObjects.size() > 0) {
+                ArrayAdapter<String> listAdapter = new ArrayAdapter<>(this, R.layout.centered_listview_item, foundObjects);
+                objFoundList.setAdapter(listAdapter);
+                objFoundList.setVisibility(View.VISIBLE);
+                foundObjectText.setVisibility(View.VISIBLE);
+                String stringFoundObjectNumber = Integer.toString(foundObjects.size());
+                textObjetcts.setText(stringFoundObjectNumber);
+            } else {
+                objFoundList.setVisibility(View.GONE);
+                foundObjectText.setVisibility(View.GONE);
+                textObjetcts.setText("0");
+            }
 
-        textObjetcts.setText(Integer.toString(foundObjects.size()));
+            topPoints = gameResult.getInt("Points");
+
+            if (topPoints > 0) {
+                String stringTopPoints = topPoints.toString();
+                textPoints.setText(stringTopPoints);
+
+                gameMode = (GameMode) gameResult.getSerializable("GameMode");
+                AppState.get().submitPlayerScore(gameMode, topPoints, true, this);
+                AppState.get().setTopScore(gameMode, topPoints);
+                AppState.get().updatePlayerData();
+            } else {
+                textPoints.setText("0");
+            }
+        }
 
         playButton.setOnClickListener((View view) -> {
                     setResult(RESULT_OK, null);
@@ -74,9 +81,10 @@ public class GameOverActivity extends AppCompatActivity {
                 }
         );
 
+
         challengeButton.setOnClickListener((View view) -> {
             try {
-                String shareBody = "Hey, I challenge you to beat by score of " + topPoints + " points in the " + gameMode + " mode. Here is the app check it out : <link to app>";
+                String shareBody = "Hey, I challenge you to beat by score of " + topPoints + " points in the " + gameMode + " mode. Download it now from the app store!";
                 Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
                 sharingIntent.setType("text/plain");
                 sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "I challenge you !");

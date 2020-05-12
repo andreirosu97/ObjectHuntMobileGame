@@ -1,9 +1,7 @@
 package org.redstudios.objecthunt;
 
 import android.Manifest;
-import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -289,13 +287,9 @@ public class SignInActivity extends AppCompatActivity implements CallbackableWit
         builder.setMessage("Please connect your device to the internet and retry.");
         DialogInterface.OnClickListener dialogClickListener = (DialogInterface dialog, int which) -> {
             if (DialogInterface.BUTTON_POSITIVE == which) {
-                Log.d("SignInTAG", "Restarting app");
-                Intent mStartActivity = new Intent(SignInActivity.this, SignInActivity.class);
-                int mPendingIntentId = 123456;
-                PendingIntent mPendingIntent = PendingIntent.getActivity(SignInActivity.this, mPendingIntentId, mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
-                AlarmManager mgr = (AlarmManager) SignInActivity.this.getSystemService(Context.ALARM_SERVICE);
-                mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 20, mPendingIntent);
+                Log.d("SignInTAG", "Closing app");
                 System.exit(0);
+
             }
         };
 
@@ -306,7 +300,7 @@ public class SignInActivity extends AppCompatActivity implements CallbackableWit
             }
         });
 
-        builder.setPositiveButton("Restart app", dialogClickListener);
+        builder.setPositiveButton("Close app", dialogClickListener);
         builder.setOnDismissListener(dismissListener);
 
         AlertDialog dialog = builder.create();

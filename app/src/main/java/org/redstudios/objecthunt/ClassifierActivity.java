@@ -1,14 +1,18 @@
 package org.redstudios.objecthunt;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Typeface;
 import android.media.ImageReader.OnImageAvailableListener;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.util.Size;
 import android.util.TypedValue;
 
@@ -90,8 +94,15 @@ public class ClassifierActivity extends CameraActivity implements OnImageAvailab
             totalCurrentPoints = getCurrentPoints() + 100 + foundObjects.size() * 25;
             addFoundObject(classifier.popPeekObject());
             isObjectFound = true;
-            addTime(20 - foundObjects.size());
-            //TODO Play sound or sth +- vibrate flash the screen in one color
+            addTime(timeToAdd);
+            Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+            // Vibrate for 500 milliseconds
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
+            } else {
+                //deprecated in API 26
+                v.vibrate(500);
+            }
         }
 
         runInBackground(

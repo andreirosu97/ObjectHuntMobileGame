@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:text="Game over"
+            android:text="@string/game_over"
             android:textAppearance="@style/TextAppearance.ObjHunt.Profile.Title" />
 
         <TextView
@@ -25,40 +25,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:paddingLeft="5dp"
-            android:text="...  You ran out of time"
+            android:text="@string/let_s_see_how_you_did_all_details_are_below"
             android:textColor="@color/darkGray"
-            android:textSize="24dp"
+            android:textSize="24sp"
             android:textStyle="bold" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="5dp"
-            android:text="Total points: "
-            android:textColor="@color/darkGray"
-            android:textSize="24dp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/TextViewPoints"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="5dp"
-            android:textColor="@color/darkGray"
-            android:textSize="24dp"
-            android:textStyle="bold" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="@android:drawable/dialog_holo_light_frame"
@@ -70,6 +44,29 @@
         android:paddingBottom="16dp">
 
         <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/total_points"
+                android:textColor="@color/darkGray"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/TextViewPoints"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/darkGray"
+                android:textSize="24sp"
+                android:text="@string/_0"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -77,38 +74,22 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="6dp"
-                android:text="Objects Found: "
-                android:textAppearance="@style/TextAppearance.ObjHunt.Profile.Simple.Dark.Text" />
+                android:text="@string/objects_found"
+                android:textColor="@color/darkGray"
+                android:textStyle="bold"
+                android:textSize="24sp" />
 
             <TextView
                 android:id="@+id/TextViewNrObj"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.ObjHunt.Profile.Simple.Dark.Text"
-                android:text='0'
+                android:textColor="@color/darkGray"
+                android:textSize="24sp"
+                android:text="@string/_0"
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <ListView
-            android:id="@+id/ObjFoundList"
-            style="@style/Widget.ObjHunt.ListView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:background="@android:drawable/dialog_holo_light_frame"
-            android:padding="5dp" />
-
-        <Button
-            android:id="@+id/challengeButton"
-            style="@style/Widget.ObjHunt.Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="0"
-            android:text="@string/game_over_challenge_text"
-            android:textSize="24sp" />
 
         <Button
             android:id="@+id/playButton"
@@ -120,15 +101,47 @@
             android:text="@string/game_over_play_text"
             android:textSize="24sp" />
 
-        <Button
-            android:id="@+id/backButton"
-            style="@style/Widget.ObjHunt.Button"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="0"
-            android:text="@string/game_over_Back_text"
-            android:textSize="24sp" />
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/challengeButton"
+                style="@style/Widget.ObjHunt.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:text="@string/game_over_challenge_text"
+                android:textSize="19sp" />
+
+            <Button
+                android:id="@+id/backButton"
+                style="@style/Widget.ObjHunt.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:text="@string/game_over_Back_text"
+                android:textSize="19sp" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/object_found_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/list_of_objects_found"
+            android:textAppearance="@style/TextAppearance.ObjHunt.Profile.Title" />
+
+        <ListView
+            android:id="@+id/ObjFoundList"
+            style="@style/Widget.ObjHunt.ListView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:background="@android:drawable/dialog_holo_light_frame"
+            android:padding="5dp" />
+
     </LinearLayout>
 
 </LinearLayout>

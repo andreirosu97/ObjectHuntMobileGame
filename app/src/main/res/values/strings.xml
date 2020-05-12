@@ -20,13 +20,13 @@
 
 
     <string name="button_placeholder">--placeholder--</string>
-    <string name="change_game_mode_text">Change GameMode</string>
+    <string name="change_game_mode_text">Previous</string>
     <string name="game_mode_button_2_text">Outdoor</string>
     <string name="game_mode_button_3_text">Office</string>
     <string name="game_mode_button_4_text">Madness</string>
+    <string name="game_over_play_text">Play Again</string>
     <string name="game_over_challenge_text">Challenge</string>
-    <string name="game_over_play_text">Play</string>
-    <string name="game_over_Back_text">Back</string>
+    <string name="game_over_Back_text">Main Menu</string>
 
 
     <string name="signin_other_error">Error at sign in</string>
@@ -34,5 +34,17 @@
     <string name="title_activity_sign_in">SignInActivity</string>
     <string name="top_score_title">Top Scores</string>
     <string name="obj_found_dialog_title"><u>Yey you found it!</u></string>
+    <string name="top_found_objects">Top found objects</string>
+    <string name="guest_player">Guest Player</string>
+    <string name="next_gamemode">Next</string>
+    <string name="no_scores_were_found_play_some_games">No scores were found</string>
+    <string name="no_objects_were_found">No objects were found</string>
+    <string name="game_over">Game over</string>
+    <string name="let_s_see_how_you_did_all_details_are_below">Let\'s see how you did.\n All details are below.</string>
+    <string name="total_points">Total points:</string>
+    <string name="_0">0</string>
+    <string name="objects_found">Objects Found:</string>
+    <string name="list_of_objects_found">List of objects found:</string>
+    <string name="find">Find:</string>
 
 </resources>

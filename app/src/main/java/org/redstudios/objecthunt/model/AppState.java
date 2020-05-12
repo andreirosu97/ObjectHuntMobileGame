@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -152,11 +151,15 @@ public class AppState {
     }
 
     public List<Pair<String, String>> getListOfObjectsFound() {
+        int numberOfObjects = 10;
         List<Pair<String, String>> objList = new ArrayList<>();
         for (String key : playerData.getObjectsFound().keySet()) {
             Object value = playerData.getObjectsFound().get(key);
             if (value != null) {
                 objList.add(Pair.create(key, value.toString()));
+                numberOfObjects--;
+                if (numberOfObjects == 0)
+                    break;
             }
         }
         return sortPairStrintString(objList);
@@ -214,11 +217,15 @@ public class AppState {
     }
 
     public List<Pair<String, String>> getPlayerScores() {
+        int numberOfScores = 5;
         List<Pair<String, String>> scores = new ArrayList<>();
         for (String key : playerData.getTopScore().keySet()) {
             Object value = playerData.getTopScore().get(key);
             if (value != null) {
                 scores.add(Pair.create(key, value.toString()));
+                numberOfScores--;
+                if (numberOfScores == 0)
+                    break;
             }
         }
         return sortPairStrintString(scores);
@@ -250,7 +257,25 @@ public class AppState {
 
     public GameMode getRandomGameMode() {
         List<GameMode> gmds = getGameModesList();
-        Integer index = Math.abs((new Random(System.currentTimeMillis() % 5000).nextInt() % gmds.size()));
+        Integer index = 0;
+        Integer maxScore = 0;
+        Object value;
+        Integer score;
+        HashMap<String, Object> tpScores = playerData.getTopScore();
+        for (int i = 0; i < gmds.size(); ++i) {
+            value = tpScores.get(gmds.get(i).getGameModeName());
+            Log.d("Leaderboard Randomizer", gmds.get(i).getGameModeName());
+            if (value != null) {
+                score = Integer.parseInt(value.toString());
+                Log.d("Leaderboard Randomizer", gmds.get(i).getGameModeName() + " " + value.toString());
+                if (maxScore < score) {
+                    index = i;
+                    maxScore = score;
+                }
+            }
+        }
+        Log.d("Leaderboard Randomizer", index.toString());
+
         return gmds.get(index);
     }
 

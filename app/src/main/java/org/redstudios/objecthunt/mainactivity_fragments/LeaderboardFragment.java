@@ -27,7 +27,8 @@ import androidx.fragment.app.Fragment;
 public class LeaderboardFragment extends Fragment implements CallbackableWithBoolean {
     private final Integer ANIM_DURATION = 100;
     private ListView listUsers;
-    private Button changeButton;
+    private Button prevButton;
+    private Button nextButton;
     private TextView gameModeTitle;
     private ProgressBar progressBar;
     private List<GameMode> gameModes;
@@ -44,7 +45,8 @@ public class LeaderboardFragment extends Fragment implements CallbackableWithBoo
         View view = inflater.inflate(R.layout.leaderboard_fragment, container, false);
         listUsers = view.findViewById(R.id.usersRank);
         progressBar = view.findViewById(R.id.progressBar_cyclic);
-        changeButton = view.findViewById(R.id.change_game_mode);
+        prevButton = view.findViewById(R.id.prev_game_mode);
+        nextButton = view.findViewById(R.id.next_game_mode);
         gameModeTitle = view.findViewById(R.id.game_mode_title);
         header = view.findViewById(R.id.leader_header);
         ldbLay = view.findViewById(R.id.ldb_rel_lay);
@@ -55,7 +57,14 @@ public class LeaderboardFragment extends Fragment implements CallbackableWithBoo
         fadeOutAnimation.setDuration(ANIM_DURATION);
         fadeOutAnimation.setFillAfter(true);
 
-        changeButton.setOnClickListener((View v) -> {
+        prevButton.setOnClickListener((View v) -> {
+            ldbLay.startAnimation(fadeOutAnimation);
+            handler.postDelayed(() -> {
+                loadLeaderBoard(getPrevGameMode());
+            }, 600);
+        });
+
+        nextButton.setOnClickListener((View v) -> {
             ldbLay.startAnimation(fadeOutAnimation);
             handler.postDelayed(() -> {
                 loadLeaderBoard(getNextGameMode());
@@ -72,7 +81,8 @@ public class LeaderboardFragment extends Fragment implements CallbackableWithBoo
         if (getActivity() != null) {
             currentGameMode = gameModes.indexOf(gameMode);
             ldbLay.setVisibility(View.GONE);
-            changeButton.setVisibility(View.GONE);
+            prevButton.setVisibility(View.GONE);
+            nextButton.setVisibility(View.GONE);
             listUsers.setVisibility(View.GONE);
             gameModeTitle.setVisibility(View.GONE);
             progressBar.setVisibility(View.VISIBLE);
@@ -94,7 +104,8 @@ public class LeaderboardFragment extends Fragment implements CallbackableWithBoo
                 progressBar.setVisibility(View.GONE);
                 ldbLay.startAnimation(fadeInAnimation);
                 ldbLay.setVisibility(View.VISIBLE);
-                changeButton.setVisibility(View.VISIBLE);
+                prevButton.setVisibility(View.VISIBLE);
+                nextButton.setVisibility(View.VISIBLE);
                 listUsers.setVisibility(View.VISIBLE);
                 gameModeTitle.setVisibility(View.VISIBLE);
             }, ANIM_DURATION);
@@ -106,6 +117,15 @@ public class LeaderboardFragment extends Fragment implements CallbackableWithBoo
             currentGameMode = 0;
         } else {
             currentGameMode++;
+        }
+        return gameModes.get(currentGameMode);
+    }
+
+    private GameMode getPrevGameMode() {
+        if (currentGameMode == 0) {
+            currentGameMode = gameModes.size() - 1;
+        } else {
+            currentGameMode--;
         }
         return gameModes.get(currentGameMode);
     }

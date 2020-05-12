@@ -75,6 +75,13 @@
         <item name="android:textSize">30sp</item>
     </style>
 
+    <style name="TextAppearance.ObjHunt.Profile.Simple.NoScore.Text" parent="TextAppearance.MaterialComponents.Headline4">
+        <item name="textAllCaps">false</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/casualTextColor</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
     <style name="TextAppearance.ObjHunt.Profile.Simple.Light.Text" parent="TextAppearance.MaterialComponents.Headline4">
         <item name="textAllCaps">false</item>
         <item name="android:textStyle">bold</item>
