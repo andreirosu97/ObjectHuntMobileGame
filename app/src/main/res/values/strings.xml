@@ -46,5 +46,6 @@
     <string name="objects_found">Objects Found:</string>
     <string name="list_of_objects_found">List of objects found:</string>
     <string name="find">Find:</string>
+    <string name="skip_image">Skip image</string>
 
 </resources>

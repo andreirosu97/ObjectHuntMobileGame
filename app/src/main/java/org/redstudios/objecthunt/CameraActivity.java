@@ -20,11 +20,14 @@ import android.os.Trace;
 import android.util.Log;
 import android.util.Size;
 import android.view.Surface;
+import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.redstudios.objecthunt.cameraactivity_fragments.CameraConnectionFragment;
 import org.redstudios.objecthunt.cameraactivity_fragments.LegacyCameraConnectionFragment;
@@ -62,6 +65,8 @@ public abstract class CameraActivity extends AppCompatActivity
     private LinearLayout bottomSheetLayout;
     private LinearLayout gestureLayout;
     protected ProgressBar closenessProgressBar;
+    protected FloatingActionButton skipButton;
+    protected FloatingActionButton giveUpButton;
     protected TextView recognitionTextView,
             recognitionValueTextView,
             textViewTargetObject,
@@ -72,6 +77,7 @@ public abstract class CameraActivity extends AppCompatActivity
 
     protected int thresholdAccuracy = 40;
     protected int timeToAdd = 15;
+    protected int skipsLeft;
 
     protected ArrayList<String> foundObjects = new ArrayList<>();
     protected Integer totalCurrentPoints = 0;
@@ -145,6 +151,24 @@ public abstract class CameraActivity extends AppCompatActivity
         textViewTargetObject = findViewById(R.id.tv_target_obj);
         timerTextView = findViewById(R.id.tv_timer);
         pointsTextView = findViewById(R.id.tv_points);
+
+        skipButton = findViewById(R.id.skip_image);
+        giveUpButton = findViewById(R.id.give_up_game);
+
+        giveUpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                doExit();
+            }
+        });
+
+        skipButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                doSkip();
+            }
+        });
+
     }
 
     protected int[] getRgbBytes() {
@@ -448,8 +472,6 @@ public abstract class CameraActivity extends AppCompatActivity
 
     }
 
-    //TO REIMPLEMENT
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -510,5 +532,9 @@ public abstract class CameraActivity extends AppCompatActivity
     protected abstract Size getDesiredPreviewFrameSize();
 
     protected abstract void onInferenceConfigurationChanged();
+
+    protected abstract void doExit();
+
+    protected abstract void doSkip();
 
 }

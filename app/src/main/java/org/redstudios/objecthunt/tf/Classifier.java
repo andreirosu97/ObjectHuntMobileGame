@@ -50,6 +50,10 @@ public class Classifier {
      * bypass the normalization.
      */
     private Float target_perc = 0.0f;
+    private Float screen_perc = 0.0f;
+    private Float window_perc = 0.0f;
+    private Float web_perc = 0.0f;
+
     Queue<String> targetObjects;
     private static final float IMAGE_MEAN = 0.0f;
 
@@ -289,6 +293,19 @@ public class Classifier {
                 if (k.toLowerCase().equals(objectToFind.toLowerCase())) {
                     target_perc = 100 * v;
                 }
+
+                if (k.toLowerCase().equals("window screen")) {
+                    window_perc = 100 * v;
+                }
+
+                if (k.toLowerCase().equals("screen")) {
+                    screen_perc = 100 * v;
+                }
+
+                if (k.toLowerCase().equals("web site")) {
+                    web_perc = 100 * v;
+                }
+
             }
         }
 
@@ -425,9 +442,12 @@ public class Classifier {
         Log.d(TAG, "Ending queue populating");
     }
 
-    //Raul
     public Float getTargetObjPercentage() {
         return target_perc;
+    }
+
+    public Float getCheatPercentage() {
+        return web_perc + window_perc + screen_perc;
     }
 
     public String popPeekObject() {
@@ -440,5 +460,11 @@ public class Classifier {
 
     public Boolean isEmptyQueue() {
         return targetObjects.isEmpty();
+    }
+
+    public void skipObject() {
+        String object = targetObjects.peek();
+        targetObjects.remove();
+        targetObjects.add(object);
     }
 }

@@ -5,11 +5,11 @@ import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import org.redstudios.objecthunt.MainActivity;
+import org.redstudios.objecthunt.R;
 import org.redstudios.objecthunt.mainactivity_fragments.GameModeSelectFragment;
 import org.redstudios.objecthunt.mainactivity_fragments.LeaderboardFragment;
-import org.redstudios.objecthunt.MainActivity;
 import org.redstudios.objecthunt.mainactivity_fragments.ProfileFragment;
-import org.redstudios.objecthunt.R;
 
 import androidx.annotation.NonNull;
 
@@ -19,11 +19,11 @@ public class MenuItemSelectedListener implements BottomNavigationView.OnNavigati
         caller = caller_;
     }
 
-    MainActivity caller;
-    int lastItemSelected = -1;
+    private MainActivity caller;
+    private int lastItemSelected = -1;
 
-    int opp_enter_anim = 0;
-    int opp_exit_anim = 0;
+    private int opp_enter_anim = 0;
+    private int opp_exit_anim = 0;
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {

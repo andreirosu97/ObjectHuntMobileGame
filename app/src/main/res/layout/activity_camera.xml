@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#00000000">
 
     <RelativeLayout
+        android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#00000000"
@@ -34,8 +36,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/find"
                     android:layout_marginRight="4dp"
+                    android:text="@string/find"
                     android:textAppearance="@style/TextAppearance.ObjHunt.Profile.Simple.Light.Text" />
 
                 <TextView
@@ -46,6 +48,36 @@
                     android:textAppearance="@style/TextAppearance.ObjHunt.Profile.Simple.Light.Text" />
             </LinearLayout>
         </androidx.appcompat.widget.Toolbar>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/give_up_game"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/toolbar2"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="11dp"
+            android:layout_marginTop="11dp"
+            android:layout_marginEnd="11dp"
+            android:layout_marginBottom="11dp"
+            android:contentDescription="@string/skip_image"
+            android:src="@drawable/giveup_icon"
+            app:backgroundTint="#009688"
+            app:borderWidth="0dp" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/skip_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/toolbar2"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="11dp"
+            android:layout_marginTop="11dp"
+            android:layout_marginEnd="11dp"
+            android:layout_marginBottom="11dp"
+            android:contentDescription="@string/skip_image"
+            android:src="@drawable/skip_icon"
+            app:backgroundTint="#009688"
+            app:borderWidth="0dp" />
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar2"

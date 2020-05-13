@@ -13,8 +13,11 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.util.Log;
 import android.util.Size;
 import android.util.TypedValue;
+import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -44,6 +47,7 @@ public class ClassifierActivity extends CameraActivity implements OnImageAvailab
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         gameMode = (GameMode) getIntent().getExtras().getSerializable("GameMode");
+        skipsLeft = 3;
     }
 
     @Override
@@ -88,20 +92,28 @@ public class ClassifierActivity extends CameraActivity implements OnImageAvailab
         final int imageSizeX = classifier.getImageSizeX();
         final int imageSizeY = classifier.getImageSizeY();
         final int cropSize = Math.min(previewWidth, previewHeight);
-        int targetObjPercentage = (int) (float) classifier.getTargetObjPercentage();
+        int targetObjPercentage = classifier.getCheatPercentage() >= 30 ? 0 : (int) (float) classifier.getTargetObjPercentage();
+
+        if (classifier.getCheatPercentage() >= 30) {
+            Log.e("Cheat Error", "Player trying to cheat.");
+        }
 
         if (targetObjPercentage > thresholdAccuracy) {
             totalCurrentPoints = getCurrentPoints() + 100 + foundObjects.size() * 25;
             addFoundObject(classifier.popPeekObject());
             isObjectFound = true;
             addTime(timeToAdd);
-            Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-            // Vibrate for 500 milliseconds
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
-            } else {
-                //deprecated in API 26
-                v.vibrate(500);
+            try {
+                Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                // Vibrate for 500 milliseconds
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
+                } else {
+                    //deprecated in API 26
+                    v.vibrate(500);
+                }
+            } catch (NullPointerException e) {
+                Log.e("System Error", "Missing vibration mechanism.");
             }
         }
 
@@ -111,7 +123,7 @@ public class ClassifierActivity extends CameraActivity implements OnImageAvailab
                         final long startTime = SystemClock.uptimeMillis();
                         final List<Classifier.Recognition> results =
                                 classifier.recognizeImage(rgbFrameBitmap, sensorOrientation);
-                        LOGGER.v("Detect: %s", results);
+                        LOGGER.d("Detect: %s", results);
 
                         runOnUiThread(
                                 () -> {
@@ -177,7 +189,7 @@ public class ClassifierActivity extends CameraActivity implements OnImageAvailab
         foundObjects.add(foundObject);
     }
 
-    private void doExit() {
+    protected void doExit() {
         new MaterialAlertDialogBuilder(this, R.style.AlertDialogOnExit)
                 .setIcon(R.drawable.warning_icon)
                 .setTitle("Giving up ?")
@@ -186,6 +198,18 @@ public class ClassifierActivity extends CameraActivity implements OnImageAvailab
                 .setNeutralButton("End game", (DialogInterface dialog, int which) -> openGameOverScreen())
                 .setNegativeButton("Drop game", (DialogInterface dialog, int which) -> finish())
                 .show();
+    }
+
+    protected void doSkip() {
+        if (skipsLeft > 0) {
+            skipsLeft--;
+            classifier.skipObject();
+            updateTextViewTargetObject(classifier.getPeekObject());
+            Toast.makeText(this, "You have " + skipsLeft + " skips left.", Toast.LENGTH_SHORT).show();
+            if (skipsLeft == 0) {
+                skipButton.setVisibility(View.GONE);
+            }
+        }
     }
 
     @Override
