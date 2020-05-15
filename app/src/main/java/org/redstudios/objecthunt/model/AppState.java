@@ -240,6 +240,10 @@ public class AppState {
         this.leaderboardsClient = leaderboardsClient;
     }
 
+    public LeaderboardsClient getLeaderboardsClient() {
+        return leaderboardsClient;
+    }
+
     public FirebaseFirestore getFirebaseFirestore() {
         return firebaseFirestore;
     }

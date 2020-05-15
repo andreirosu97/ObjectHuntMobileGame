@@ -196,8 +196,13 @@ public class ClassifierActivity extends CameraActivity implements OnImageAvailab
                 .setMessage("What do you want to do ?\nContinue the game\nEnd the game, go to the end screen\nDrop the game, all your progress will be lost")
                 .setPositiveButton("Continue", null)
                 .setNeutralButton("End game", (DialogInterface dialog, int which) -> openGameOverScreen())
-                .setNegativeButton("Drop game", (DialogInterface dialog, int which) -> finish())
+                .setNegativeButton("Drop game", (DialogInterface dialog, int which) -> protectedFinish())
                 .show();
+    }
+
+    private void protectedFinish() {
+        setTimeLimit(0);
+        finish();
     }
 
     protected void doSkip() {

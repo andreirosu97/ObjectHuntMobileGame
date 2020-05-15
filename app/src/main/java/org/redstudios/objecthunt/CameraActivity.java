@@ -308,24 +308,28 @@ public abstract class CameraActivity extends AppCompatActivity
         LOGGER.d("onResume " + this);
         super.onResume();
 
-        handlerThread = new HandlerThread("inference");
-        handlerThread.start();
-        handler = new Handler(handlerThread.getLooper());
-        timerHandler.postDelayed(timerRunnable, 0);
+        if (handlerThread == null) {
+            handlerThread = new HandlerThread("inference");
+            handlerThread.start();
+            handler = new Handler(handlerThread.getLooper());
+            timerHandler.postDelayed(timerRunnable, 0);
+        }
     }
 
     @Override
     public synchronized void onPause() {
         LOGGER.d("onPause " + this);
-        handlerThread.quitSafely();
-        timerHandler.removeCallbacks(timerRunnable);
+        if (timeLimit == 0) {
+            handlerThread.quitSafely();
+            timerHandler.removeCallbacks(timerRunnable);
 
-        try {
-            handlerThread.join();
-            handlerThread = null;
-            handler = null;
-        } catch (final InterruptedException e) {
-            LOGGER.e(e, "Exception!");
+            try {
+                handlerThread.join();
+                handlerThread = null;
+                handler = null;
+            } catch (final InterruptedException e) {
+                LOGGER.e(e, "Exception!");
+            }
         }
 
         super.onPause();
@@ -510,6 +514,7 @@ public abstract class CameraActivity extends AppCompatActivity
     }
 
     protected void openGameOverScreen() {
+        timeLimit = 0;
         Intent intent = new Intent(this, GameOverActivity.class);
         Bundle gameResult = new Bundle();
         gameResult.putInt("Points", getCurrentPoints());

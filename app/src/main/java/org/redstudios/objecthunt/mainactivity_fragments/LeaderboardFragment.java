@@ -1,5 +1,6 @@
 package org.redstudios.objecthunt.mainactivity_fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -11,6 +12,8 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import org.redstudios.objecthunt.R;
 import org.redstudios.objecthunt.model.AppState;
@@ -29,6 +32,7 @@ public class LeaderboardFragment extends Fragment implements CallbackableWithBoo
     private ListView listUsers;
     private Button prevButton;
     private Button nextButton;
+    private Button leaderButton;
     private TextView gameModeTitle;
     private ProgressBar progressBar;
     private List<GameMode> gameModes;
@@ -38,6 +42,7 @@ public class LeaderboardFragment extends Fragment implements CallbackableWithBoo
     final Handler handler = new Handler();
     AlphaAnimation fadeInAnimation = new AlphaAnimation(0.0f, 1.0f);//fade from 0 to 1 alpha
     AlphaAnimation fadeOutAnimation = new AlphaAnimation(1.0f, 0.0f);//fade from 1 to 0 alpha
+    private static final int RC_LEADERBOARD_UI = 9004;
 
     @Override
     public View onCreateView(
@@ -46,6 +51,7 @@ public class LeaderboardFragment extends Fragment implements CallbackableWithBoo
         listUsers = view.findViewById(R.id.usersRank);
         progressBar = view.findViewById(R.id.progressBar_cyclic);
         prevButton = view.findViewById(R.id.prev_game_mode);
+        leaderButton = view.findViewById(R.id.leader_button);
         nextButton = view.findViewById(R.id.next_game_mode);
         gameModeTitle = view.findViewById(R.id.game_mode_title);
         header = view.findViewById(R.id.leader_header);
@@ -70,6 +76,8 @@ public class LeaderboardFragment extends Fragment implements CallbackableWithBoo
                 loadLeaderBoard(getNextGameMode());
             }, 600);
         });
+
+        leaderButton.setOnClickListener((View v) -> showLeaderboard());
 
         header = (ViewGroup) inflater.inflate(R.layout.leader_board_header, listUsers, false);
         listUsers.addHeaderView(header);
@@ -128,5 +136,16 @@ public class LeaderboardFragment extends Fragment implements CallbackableWithBoo
             currentGameMode--;
         }
         return gameModes.get(currentGameMode);
+    }
+
+    private void showLeaderboard() {
+        AppState.get().getLeaderboardsClient()
+                .getLeaderboardIntent(gameModes.get(currentGameMode).getLeaderboardId())
+                .addOnSuccessListener(new OnSuccessListener<Intent>() {
+                    @Override
+                    public void onSuccess(Intent intent) {
+                        startActivityForResult(intent, RC_LEADERBOARD_UI);
+                    }
+                });
     }
 }

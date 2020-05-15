@@ -42,6 +42,18 @@
             android:textSize="15sp" />
 
         <Button
+            android:id="@+id/leader_button"
+            style="@style/Widget.ObjHunt.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/game_mode_title"
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginStart="10dp"
+            android:text="@string/show_all"
+            android:textSize="15sp" />
+
+        <Button
             android:id="@+id/next_game_mode"
             style="@style/Widget.ObjHunt.Button"
             android:layout_width="wrap_content"
