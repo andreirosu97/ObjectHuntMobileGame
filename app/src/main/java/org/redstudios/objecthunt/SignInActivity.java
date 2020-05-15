@@ -32,6 +32,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
 import org.redstudios.objecthunt.model.AppState;
+import org.redstudios.objecthunt.model.PlayerData;
 import org.redstudios.objecthunt.utils.CallbackableWithBoolean;
 
 import java.util.HashMap;
@@ -107,20 +108,17 @@ public class SignInActivity extends AppCompatActivity implements CallbackableWit
                     Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                 } else {
                     Log.d(TAG, "No such user, creating it.");
-                    HashMap<String, Object> dataStructure = new HashMap<>();
-                    dataStructure.put("nickName", user.getDisplayName());
-                    dataStructure.put("topScore", new HashMap<>());
-                    dataStructure.put("objectsFound", new HashMap<>());
-                    firebaseFirestore.collection("users").document(user.getUid()).set(dataStructure);
+                    PlayerData playerData = new PlayerData(user.getDisplayName(), 0L, 0L, new HashMap<>(), new HashMap<>());
+                    userDocument.set(playerData);
                 }
+                AppState.get().setUserDocument(userDocument);
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
             } else {
                 Log.d(TAG, "get failed with ", task.getException());
+                toastError("Database error.");
             }
         });
-        AppState.get().setUserDocument(userDocument);
-
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
     }
 
     @Override

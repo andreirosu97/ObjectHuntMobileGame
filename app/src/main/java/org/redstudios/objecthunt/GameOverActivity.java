@@ -32,6 +32,7 @@ public class GameOverActivity extends AppCompatActivity {
         TextView textObjetcts = findViewById(R.id.TextViewNrObj);
         TextView textPoints = findViewById(R.id.TextViewPoints);
         TextView foundObjectText = findViewById(R.id.object_found_text);
+        TextView textTimePlayed = findViewById(R.id.TextViewTimePlayed);
         Button challengeButton = findViewById(R.id.challengeButton);
         Button playButton = findViewById(R.id.playButton);
         Button backButton = findViewById(R.id.backButton);
@@ -39,9 +40,8 @@ public class GameOverActivity extends AppCompatActivity {
         if (gameResult != null) {
             ArrayList<String> foundObjects = gameResult.getStringArrayList("FoundObjects");
 
-            AppState.get().addToObjetsFound(foundObjects);
-
             if (foundObjects != null && foundObjects.size() > 0) {
+                AppState.get().addToObjetsFound(foundObjects);
                 ArrayAdapter<String> listAdapter = new ArrayAdapter<>(this, R.layout.centered_listview_item, foundObjects);
                 objFoundList.setAdapter(listAdapter);
                 objFoundList.setVisibility(View.VISIBLE);
@@ -55,6 +55,14 @@ public class GameOverActivity extends AppCompatActivity {
             }
 
             topPoints = gameResult.getInt("Points");
+            Long timePlayed = gameResult.getLong("TimePlayed");
+
+            if (timePlayed > 0) {
+                String stringTimePlayed = timePlayed.toString() + " s";
+                textTimePlayed.setText(stringTimePlayed);
+                AppState.get().setBestTime(timePlayed);
+                AppState.get().addTotalTime(timePlayed);
+            }
 
             if (topPoints > 0) {
                 String stringTopPoints = topPoints.toString();
@@ -63,10 +71,11 @@ public class GameOverActivity extends AppCompatActivity {
                 gameMode = (GameMode) gameResult.getSerializable("GameMode");
                 AppState.get().submitPlayerScore(gameMode, topPoints, true, this);
                 AppState.get().setTopScore(gameMode, topPoints);
-                AppState.get().updatePlayerData();
             } else {
                 textPoints.setText("0");
             }
+
+            AppState.get().updatePlayerData();
         }
 
         playButton.setOnClickListener((View view) -> {

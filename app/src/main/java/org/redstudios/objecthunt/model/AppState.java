@@ -20,6 +20,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import org.redstudios.objecthunt.utils.CallbackableWithBoolean;
+import org.redstudios.objecthunt.utils.TimeConvertor;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -58,6 +59,8 @@ public class AppState {
         userDocument.addSnapshotListener((@Nullable DocumentSnapshot document,
                                           @Nullable FirebaseFirestoreException e) -> {
             String nickName;
+            Long bestTime;
+            Long totalTime;
             HashMap<String, Object> topScore;
             HashMap<String, Object> objectsFound;
 
@@ -69,10 +72,12 @@ public class AppState {
             if (document != null && document.exists()) {
                 Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                 nickName = document.getString("nickName");
+                bestTime = document.getLong("bestTime");
+                totalTime = document.getLong("totalTime");
                 objectsFound = (HashMap<String, Object>) document.get("objectsFound");
                 topScore = (HashMap<String, Object>) document.get("topScore");
 
-                playerData = new PlayerData(nickName, objectsFound, topScore);
+                playerData = new PlayerData(nickName, bestTime != null ? bestTime : 0, totalTime != null ? totalTime : 0, objectsFound, topScore);
 
                 for (String key : topScore.keySet()) {
                     Log.i("User Info", key + " has the score of " + topScore.get(key));
@@ -138,12 +143,29 @@ public class AppState {
         return playerData.getNickName();
     }
 
+    public String getBestTime() {
+        return playerData.getBestTime() + " s";
+    }
+
+    public String getTotalTime() {
+        TimeConvertor timeConvertor = new TimeConvertor();
+        return timeConvertor.getTimeFromSeconds(playerData.getTotalTime());
+    }
+
     public void setNickName(String nickName) {
         playerData.setNickName(nickName);
     }
 
     public void setTopScore(GameMode gameMode, Integer newScore) {
         playerData.submitPlayerScore(gameMode, newScore);
+    }
+
+    public void setBestTime(Long bestTime) {
+        playerData.setBestTime(bestTime);
+    }
+
+    public void addTotalTime(Long time) {
+        playerData.addTime(time);
     }
 
     public void addToObjetsFound(List<String> objectsFound) {

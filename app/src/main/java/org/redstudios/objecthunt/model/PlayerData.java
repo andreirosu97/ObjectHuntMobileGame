@@ -5,20 +5,32 @@ import java.util.List;
 
 public class PlayerData {
     private String nickName;
+    private long bestTime;
+    private long totalTime;
     private HashMap<String, Object> objectsFound;
     private HashMap<String, Object> topScore;
 
     public PlayerData() {
     }
 
-    public PlayerData(String nickName, HashMap<String, Object> objectsFound, HashMap<String, Object> topScore) {
+    public PlayerData(String nickName, long bestTime, long totalTime, HashMap<String, Object> objectsFound, HashMap<String, Object> topScore) {
         this.nickName = nickName;
+        this.bestTime = bestTime;
+        this.totalTime = totalTime;
         this.objectsFound = objectsFound;
         this.topScore = topScore;
     }
 
     public String getNickName() {
         return nickName;
+    }
+
+    public long getTotalTime() {
+        return totalTime;
+    }
+
+    public long getBestTime() {
+        return bestTime;
     }
 
     public HashMap<String, Object> getObjectsFound() {
@@ -64,10 +76,21 @@ public class PlayerData {
         }
     }
 
+    public void setBestTime(long bestTime) {
+        if (bestTime > this.bestTime)
+            this.bestTime = bestTime;
+    }
+
+    public void addTime(long time) {
+        totalTime = totalTime + time;
+    }
+
     @Override
     public String toString() {
         return "PlayerData{" +
                 "nickName='" + nickName + '\'' +
+                ", bestTime='" + bestTime + '\'' +
+                ", totalTime='" + totalTime + '\'' +
                 ", objectsFound=" + objectsFound +
                 ", topScore=" + topScore +
                 '}';

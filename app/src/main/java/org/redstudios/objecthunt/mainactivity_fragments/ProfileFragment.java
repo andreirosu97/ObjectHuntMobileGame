@@ -26,6 +26,8 @@ public class ProfileFragment extends Fragment {
     private ListView listScores;
     private TextView noScores;
     private TextView noTopScores;
+    private TextView bestTime;
+    private TextView totalTime;
     private ListView listTopScores;
     private TextView name;
 
@@ -40,6 +42,8 @@ public class ProfileFragment extends Fragment {
         noScores = view.findViewById(R.id.NoObjectsTextView);
         listTopScores = view.findViewById(R.id.topScores);
         name = view.findViewById(R.id.TextViewName);
+        bestTime = view.findViewById(R.id.TextViewBestTime);
+        totalTime = view.findViewById(R.id.TextViewTotalTime);
         return view;
     }
 
@@ -58,6 +62,8 @@ public class ProfileFragment extends Fragment {
     private void updateProfileData() {
         if (getActivity() != null) {
             name.setText(AppState.get().getNickName());
+            bestTime.setText(AppState.get().getBestTime());
+            totalTime.setText(AppState.get().getTotalTime());
 
             List<Pair<String, String>> topScores = AppState.get().getPlayerScores();
             if (topScores.size() == 0) {

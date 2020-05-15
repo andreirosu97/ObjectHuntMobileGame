@@ -81,13 +81,15 @@ public abstract class CameraActivity extends AppCompatActivity
 
     protected ArrayList<String> foundObjects = new ArrayList<>();
     protected Integer totalCurrentPoints = 0;
-    private Integer timeLimit = 20;
+    private Integer timeLimit = 21;
+    private Integer playedTime = 0;
     Handler timerHandler = new Handler();
     Runnable timerRunnable = new Runnable() {
         @Override
         public void run() {
             if (!isObjectFound) {
                 timeLimit = timeLimit - 1;
+                playedTime = playedTime + 1;
             }
             int seconds = timeLimit;
             int minutes = seconds / 60;
@@ -312,6 +314,7 @@ public abstract class CameraActivity extends AppCompatActivity
             handlerThread = new HandlerThread("inference");
             handlerThread.start();
             handler = new Handler(handlerThread.getLooper());
+            playedTime = 0;
             timerHandler.postDelayed(timerRunnable, 0);
         }
     }
@@ -518,6 +521,7 @@ public abstract class CameraActivity extends AppCompatActivity
         Intent intent = new Intent(this, GameOverActivity.class);
         Bundle gameResult = new Bundle();
         gameResult.putInt("Points", getCurrentPoints());
+        gameResult.putLong("TimePlayed", playedTime);
         gameResult.putSerializable("GameMode", gameMode);
         gameResult.putStringArrayList("FoundObjects", foundObjects);
         intent.putExtras(gameResult);
