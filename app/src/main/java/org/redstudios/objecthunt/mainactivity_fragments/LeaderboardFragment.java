@@ -90,6 +90,7 @@ public class LeaderboardFragment extends Fragment implements CallbackableWithBoo
             currentGameMode = gameModes.indexOf(gameMode);
             ldbLay.setVisibility(View.GONE);
             prevButton.setVisibility(View.GONE);
+            leaderButton.setVisibility(View.GONE);
             nextButton.setVisibility(View.GONE);
             listUsers.setVisibility(View.GONE);
             gameModeTitle.setVisibility(View.GONE);
@@ -113,6 +114,7 @@ public class LeaderboardFragment extends Fragment implements CallbackableWithBoo
                 ldbLay.startAnimation(fadeInAnimation);
                 ldbLay.setVisibility(View.VISIBLE);
                 prevButton.setVisibility(View.VISIBLE);
+                leaderButton.setVisibility(View.VISIBLE);
                 nextButton.setVisibility(View.VISIBLE);
                 listUsers.setVisibility(View.VISIBLE);
                 gameModeTitle.setVisibility(View.VISIBLE);
