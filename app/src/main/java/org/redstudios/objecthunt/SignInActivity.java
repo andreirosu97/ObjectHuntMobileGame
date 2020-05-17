@@ -116,6 +116,7 @@ public class SignInActivity extends AppCompatActivity implements CallbackableWit
                 startActivity(intent);
             } else {
                 Log.d(TAG, "get failed with ", task.getException());
+                startErrorDialogNetworkError();
                 toastError("Database error.");
             }
         });
@@ -232,6 +233,7 @@ public class SignInActivity extends AppCompatActivity implements CallbackableWit
                                                 }
                                             });
                                 } else {
+                                    startErrorDialogNetworkError();
                                     toastError("Authentication error.");
                                 }
                             } else {
@@ -262,6 +264,7 @@ public class SignInActivity extends AppCompatActivity implements CallbackableWit
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.e("SignInTAG", "signInWithCredential:failure", task.getException());
+                        startErrorDialogNetworkError();
                         toastError("Authentication failed.");
                     }
                 });
