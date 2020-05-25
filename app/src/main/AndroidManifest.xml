@@ -24,7 +24,7 @@
         tools:ignore="GoogleAppIndexingWarning">
         <activity
             android:name=".model.ImageFoundDialog"
-            android:theme="@style/FullHeightDialog"></activity>
+            android:theme="@style/FullHeightDialog" />
 
         <meta-data
             android:name="com.google.android.gms.games.APP_ID"

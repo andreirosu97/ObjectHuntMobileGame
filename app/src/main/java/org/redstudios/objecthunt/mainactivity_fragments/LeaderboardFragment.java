@@ -24,6 +24,7 @@ import org.redstudios.objecthunt.utils.CallbackableWithBoolean;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 
@@ -65,6 +66,7 @@ public class LeaderboardFragment extends Fragment implements CallbackableWithBoo
 
         prevButton.setOnClickListener((View v) -> {
             ldbLay.startAnimation(fadeOutAnimation);
+            prevButton.setEnabled(false);
             handler.postDelayed(() -> {
                 loadLeaderBoard(getPrevGameMode());
             }, 600);
@@ -72,6 +74,7 @@ public class LeaderboardFragment extends Fragment implements CallbackableWithBoo
 
         nextButton.setOnClickListener((View v) -> {
             ldbLay.startAnimation(fadeOutAnimation);
+            nextButton.setEnabled(false);
             handler.postDelayed(() -> {
                 loadLeaderBoard(getNextGameMode());
             }, 600);
@@ -114,6 +117,8 @@ public class LeaderboardFragment extends Fragment implements CallbackableWithBoo
                 ldbLay.startAnimation(fadeInAnimation);
                 ldbLay.setVisibility(View.VISIBLE);
                 prevButton.setVisibility(View.VISIBLE);
+                prevButton.setEnabled(true);
+                nextButton.setEnabled(true);
                 leaderButton.setVisibility(View.VISIBLE);
                 nextButton.setVisibility(View.VISIBLE);
                 listUsers.setVisibility(View.VISIBLE);
@@ -140,7 +145,15 @@ public class LeaderboardFragment extends Fragment implements CallbackableWithBoo
         return gameModes.get(currentGameMode);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_LEADERBOARD_UI)
+            leaderButton.setEnabled(true);
+    }
+
     private void showLeaderboard() {
+        leaderButton.setEnabled(false);
         AppState.get().getLeaderboardsClient()
                 .getLeaderboardIntent(gameModes.get(currentGameMode).getLeaderboardId())
                 .addOnSuccessListener(new OnSuccessListener<Intent>() {

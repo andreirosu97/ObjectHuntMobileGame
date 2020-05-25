@@ -53,5 +53,7 @@
     <string name="total_time_survived">Total time survived:</string>
     <string name="total_time_played">Total time played:</string>
     <string name="best_time">Best time:</string>
+    <string name="monitor">Monitor</string>
+    <string name="_0_pts">0 pts</string>
 
 </resources>

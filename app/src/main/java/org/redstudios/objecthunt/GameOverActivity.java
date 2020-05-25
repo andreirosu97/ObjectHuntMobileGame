@@ -18,8 +18,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class GameOverActivity extends AppCompatActivity {
+    private static final int RC_GAME_OVER = 55;
     private Integer topPoints;
     private GameMode gameMode;
+    private Button challengeButton;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -33,7 +35,7 @@ public class GameOverActivity extends AppCompatActivity {
         TextView textPoints = findViewById(R.id.TextViewPoints);
         TextView foundObjectText = findViewById(R.id.object_found_text);
         TextView textTimePlayed = findViewById(R.id.TextViewTimePlayed);
-        Button challengeButton = findViewById(R.id.challengeButton);
+        challengeButton = findViewById(R.id.challengeButton);
         Button playButton = findViewById(R.id.playButton);
         Button backButton = findViewById(R.id.backButton);
 
@@ -93,15 +95,24 @@ public class GameOverActivity extends AppCompatActivity {
 
         challengeButton.setOnClickListener((View view) -> {
             try {
+                challengeButton.setEnabled(false);
                 String shareBody = "Hey, I challenge you to beat by score of " + topPoints + " points in the " + gameMode + " mode. Download it now from the app store!";
                 Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
                 sharingIntent.setType("text/plain");
                 sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "I challenge you !");
                 sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
-                startActivity(Intent.createChooser(sharingIntent, "Share via"));
+                startActivityForResult(Intent.createChooser(sharingIntent, "Share via"), RC_GAME_OVER);
             } catch (Exception e) {
                 //e.toString();
             }
         });
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_GAME_OVER)
+            challengeButton.setEnabled(true);
+    }
+
 }

@@ -36,7 +36,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="4dp"
+                    android:layout_marginEnd="4dp"
                     android:text="@string/find"
                     android:textAppearance="@style/TextAppearance.ObjHunt.Profile.Simple.Light.Text" />
 
@@ -44,7 +44,7 @@
                     android:id="@+id/tv_target_obj"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Monitor"
+                    android:text="@string/monitor"
                     android:textAppearance="@style/TextAppearance.ObjHunt.Profile.Simple.Light.Text" />
             </LinearLayout>
         </androidx.appcompat.widget.Toolbar>
@@ -90,12 +90,13 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:orientation="horizontal"
-                android:paddingRight="10dp">
+                android:paddingRight="10dp"
+                android:paddingLeft="0dp">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:gravity="center_horizontal"
                     android:orientation="horizontal">
 
@@ -103,7 +104,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginRight="2dp"
+                        android:layout_marginEnd="2dp"
                         android:src="@drawable/timer_icon" />
 
                     <TextView
@@ -111,13 +112,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textAppearance="@style/TextAppearance.ObjHunt.Profile.Simple.Light.Text"
-                        android:textSize="24dp" />
+                        android:textSize="24sp" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
                     android:gravity="center_horizontal"
                     android:orientation="horizontal">
 
@@ -125,16 +126,16 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginRight="2dp"
+                        android:layout_marginEnd="2dp"
                         android:src="@drawable/points_icon" />
 
                     <TextView
                         android:id="@+id/tv_points"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="0 pts"
+                        android:text="@string/_0_pts"
                         android:textAppearance="@style/TextAppearance.ObjHunt.Profile.Simple.Light.Text"
-                        android:textSize="24dp" />
+                        android:textSize="24sp" />
                 </LinearLayout>
             </RelativeLayout>
         </androidx.appcompat.widget.Toolbar>
